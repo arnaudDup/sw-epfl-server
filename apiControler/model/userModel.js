@@ -32,7 +32,7 @@ function controllerUtilisateur(){
 
               utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
-              var insertQuery = "insert into usertable (idapiconnection,lastname,firstname,email,birthdate,profilepicture,coverpicture) values("+res.body.id+",'"
+              var insertQuery = "insert into usertable (id,idapiconnection,lastname,firstname,email,birthdate,profilepicture,coverpicture) values(1,"+res.body.id+",'"
                                 +res.body.last_name+"','"+res.body.first_name+"','"+res.body.email+"','"+res.body.birthday+"','"
                                 +urlPictureFacebook+"','"+res.body.cover.source+"');";
 

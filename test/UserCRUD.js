@@ -40,6 +40,7 @@ var inserQuery = "insert into usertable (idapiconnection,lastname,firstname,emai
                   "'"+userTest.first_name+"','"+userTest.email+"','"+userTest.birthday+"','"+
                   userTest.picture.url+"','"+userTest.cover.source+"');";
 
+logger.info('QueryINser',inserQuery)
 //Our parent block
 describe('Test User API', () => {
 

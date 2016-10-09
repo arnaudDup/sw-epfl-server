@@ -6,7 +6,7 @@ function BaseDeDonnee()
 {
 
     // first we select on wich database we are going to work.
-    let  urlDatabase = null
+    var urlDatabase = null
     if(process.env.NODE_ENV !== 'test') {
         utils.logInfo("Postgres.Database(), run in normal configuration");
         urlDatabase = databaseConfig.PostGre.url
@@ -21,7 +21,7 @@ function BaseDeDonnee()
     this.ConnexionPostgres  = function ()
     {
         // Get a Postgres client from the connection pool
-        //this.postgres.defaults.ssl = true;
+        this.postgres.defaults.ssl = true;
         this.postgres.connect(urlDatabase, function(err, client, done) 
         {
             // Handle connection errors
