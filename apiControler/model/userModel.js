@@ -4,7 +4,7 @@ var unirest = require('unirest');
 var util = require('util');
 var error = require('../../setting/error.js');
 var databaseConfig = require('../../setting/database.js');
-var userDto = require ('../objet/usersDto.js')
+var userDto = require ('../object/user.js')
 var utils = require('../utils/Utils.js');
 
 // database
@@ -66,6 +66,8 @@ function controllerUtilisateur(){
 
     this.getUser = function(idApi,callback){
       utils.logInfo("controllerUtilisateur(), get user "+idApi+", getUser()");
+
+      // Dusan code
     }  
 
 
