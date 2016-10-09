@@ -35,11 +35,6 @@ var userTest = {
           "id": "10211410486004800"
   }
 
-var inserQuery = "insert into usertable (idapiconnection,lastname,firstname,email,birthdate,profilepicture,"+
-                  "coverpicture) values("+userTest.id+",'"+userTest.last_name+"',"+
-                  "'"+userTest.first_name+"','"+userTest.email+"','"+userTest.birthday+"','"+
-                  userTest.picture.url+"','"+userTest.cover.source+"');";
-
 logger.info('QueryINser',inserQuery)
 //Our parent block
 describe('Test User API', () => {
@@ -49,6 +44,7 @@ describe('Test User API', () => {
        utils.logInfo("Before testing(), insertion of an user");
        done();
     });
+
   
     /*
     * Should test if we can get the user
@@ -66,6 +62,7 @@ describe('Test User API', () => {
         });
     });
 
+
     /*
     * Should test if we can create the user.
     */
@@ -81,6 +78,7 @@ describe('Test User API', () => {
               });
         });
     });
+
 
     /*
     * Should test if we delete the user.
@@ -98,6 +96,7 @@ describe('Test User API', () => {
         });
     });
 
+
     /*
     * Should test if we update the user.
     */
@@ -113,7 +112,6 @@ describe('Test User API', () => {
               });
         });
     });
-
 
 
 
