@@ -4,7 +4,7 @@ var unirest = require('unirest');
 var util = require('util');
 var error = require('../../setting/error.js');
 var databaseConfig = require('../../setting/database.js');
-var userDto = require ('../dto/usersDto.js')
+var userDto = require ('../objet/usersDto.js')
 var utils = require('../utils/Utils.js');
 
 // database
@@ -17,7 +17,7 @@ function controllerUtilisateur(){
     this.addUser = function (body,callback)
     {   	
         utils.logDebug("adduser()"+JSON.stringify(buildRequestFacebook(body.id,body.accesToken)));
-        // GET the user description.
+        // GET the user description by doing a post on facebook API.
         unirest.get(buildRequestFacebook(body.id,body.accesToken)).end(function(res){
 
           if (res.error) {
@@ -27,8 +27,11 @@ function controllerUtilisateur(){
           else {
               // make an JsonObject.
               res.body  = JSON.parse(res.body); 
+              // build the url to get the picture
               var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
+
               utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+
               var insertQuery = "insert into usertable (idapiconnection,lastname,firstname,email,birthdate,profilepicture,coverpicture) values("+res.body.id+",'"
                                 +res.body.last_name+"','"+res.body.first_name+"','"+res.body.email+"','"+res.body.birthday+"','"
                                 +urlPictureFacebook+"','"+res.body.cover.source+"');";
@@ -41,16 +44,17 @@ function controllerUtilisateur(){
                         return callback(modele.InitizializeBadAnwser(error.operationFailled));
                     }
 
-                      client.query(insertQuery, function(err, result){
-                      done();
+                    client.query(insertQuery, function(err, result){
+                    done();
                       
-                      if(err) {
-                          utils.logDebug(err);
-                          return callback(modele.InitizializeBadAnwser(error.operationFailled));
-                      }
+                    if(err) {
+                        utils.logDebug(err);
+                        return callback(modele.InitizializeBadAnwser(error.operationFailled));
+                    }
                       userDto.InitizializeFromFacebook(res.body,urlPictureFacebook);
+
                       var response =  userDto.toJson();
-                      utils.logDebug("adduser()"+JSON.stringify(response));
+                      utils.logDebug("adduser() dernier appel ! "+JSON.stringify(response));
                       callback(response);
                   });
               });
