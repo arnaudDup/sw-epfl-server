@@ -2,11 +2,11 @@
 process.env.NODE_ENV = 'test';
 
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../app');
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var server = require('../app');
 var utils = require('../apiControler/utils/Utils.js');
-let should = chai.should();
+var should = chai.should();
 
 chai.use(chaiHttp);
 
@@ -35,7 +35,6 @@ var userTest = {
           "id": "10211410486004800"
   }
 
-logger.info('QueryINser',inserQuery)
 //Our parent block
 describe('Test User API', () => {
 
@@ -52,7 +51,7 @@ describe('Test User API', () => {
     describe('get user', () => {
         it('should get a user', (done) => {
           chai.request(server)
-              .get('/api/User/'+userTest.id)
+              .get('/api/Users/'+userTest.id)
               .end((err, res) => {
                   res.should.have.status(200);
                   res.body.should.be.a('array');
@@ -61,24 +60,6 @@ describe('Test User API', () => {
               });
         });
     });
-
-
-    /*
-    * Should test if we can create the user.
-    */
-    describe('create user', () => {
-        it('should create a user', (done) => {
-          chai.request(server)
-              .post('/api/User/')
-              .end((err, res) => {
-                  res.should.have.status(200);
-                  res.body.should.be.a('array');
-                  res.body.length.should.be.eql(0);
-                done();
-              });
-        });
-    });
-
 
     /*
     * Should test if we delete the user.
@@ -86,7 +67,7 @@ describe('Test User API', () => {
     describe('delete user', () => {
         it('should delete a user', (done) => {
           chai.request(server)
-              .delete('/api/User/'+userTest.id)
+              .delete('/api/Users/'+userTest.id)
               .end((err, res) => {
                   res.should.have.status(200);
                   res.body.should.be.a('array');
@@ -103,7 +84,7 @@ describe('Test User API', () => {
     describe('update user', () => {
         it('should update a user', (done) => {
           chai.request(server)
-              .post('/api/User/'+userTest.id)
+              .post('/api/Users/'+userTest.id)
               .end((err, res) => {
                   res.should.have.status(200);
                   res.body.should.be.a('array');
