@@ -62,7 +62,7 @@ router.route("/:id")
     })
 
     // Update user information.
-    .post(function(req,res)
+    .put(function(req,res)
     {
         utils.logInfo("routing.user(), post to update user");
         utils.logDebug("routing.user()"+JSON.stringify(req.body));
@@ -77,8 +77,26 @@ router.route("/:id")
         }
     });
 
-
     // get a user by his id
+router.route("/location/:id")
+
+    // Get the user.
+    .put(function(req,res)
+    {
+        utils.logInfo("routing.user(), get user");
+        if(typeof(req.params.id) != 'undefined'){
+            userControler.updateLocation(req.params.id,req.body,function(reponse){
+                res.json(reponse);
+            });
+        }
+        else{
+           var response = modele.InitizializeBadAnwser(error.operationFailled);
+           res.json(response);
+        }
+
+    });
+
+// get a user by his id
 router.route("/around/:id")
 
     // Get the user.
