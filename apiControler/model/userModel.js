@@ -92,7 +92,12 @@ function controllerUtilisateur(){
                       callback({"success":"true","error":"No"});
               });
         });
-    }           
+    }    
+
+    this.updateLocation = function (UserDto,callback){
+
+       utils.logInfo("yolo(), updateUser , updateLocation()");
+    }
     
     this.updateUser = function (UserDto,callback){
 
