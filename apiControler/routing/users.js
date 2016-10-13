@@ -18,13 +18,12 @@ router.route("/")
         // if the body of the request is defined we can rtry to add user
 	    if(req.body != undefined){
             // We call user Control with the callback method json to send a Json
-    		userControler.addUser(req.body,function(reponse){
-  				res.json(reponse);
+    		userControler.addUser(req.body,function(reponse, htmlCode=200){
+  				res.status(htmlCode).json(reponse);
   			});
     	}
         else {
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
+           res.status(error.bad_request).json(null);
         }
     })
 
@@ -41,8 +40,7 @@ router.route("/:id")
             });
         }
         else{
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
+           res.status(error.bad_request).json(null);
         }
     })
 
@@ -56,8 +54,7 @@ router.route("/:id")
             });
         }
         else{
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
+           res.status(error.bad_request).json(null);
         }
     })
 
@@ -72,33 +69,14 @@ router.route("/:id")
             });
         }
         else{
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
+           var response = null
+           res.status(error.bad_request).json(response);
         }
     });
 
-    // get a user by his id
-router.route("/location/:id")
-
-    // Get the user.
-    .put(function(req,res)
-    {
-        utils.logInfo("routing.user(), get user");
-        if(typeof(req.params.id) != 'undefined'){
-            userControler.updateLocation(req.params.id,req.body,function(reponse){
-                res.json(reponse);
-            });
-        }
-        else{
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
-        }
-
-    });
 
 // get a user by his id
 router.route("/around/:id")
-
     // Get the user.
     .get(function(req,res)
     {
@@ -108,9 +86,8 @@ router.route("/around/:id")
                 res.json(reponse);
             });
         }
-        else{
-           var response = modele.InitizializeBadAnwser(error.operationFailled);
-           res.json(response);
+        else {
+           res.status(error.bad_request).json(null);
         }
 
     });

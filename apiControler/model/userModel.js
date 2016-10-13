@@ -20,9 +20,9 @@ function controllerUtilisateur(){
         // GET the user description by doing a post on facebook API.
         unirest.get(buildRequestFacebook(body.id,body.accesToken)).end(function(res){
 
+          // We can't reach the facebook graph.
           if (res.error) {
-            var response = modele.InitizializeBadAnwser(error.operationFailled);
-            callback(response);
+           callback(null,error.unavailable_ressources);
           }
           else {
               // make an JsonObject.
@@ -41,7 +41,7 @@ function controllerUtilisateur(){
 
                     if(err) {
                         utils.logDebug(err);
-                        return callback(modele.InitizializeBadAnwser(error.operationFailled));
+                        callback(null,error.unavailable_ressources);
                     }
 
                     client.query(insertQuery, function(err, result){
@@ -49,13 +49,13 @@ function controllerUtilisateur(){
                       
                     if(err) {
                         utils.logDebug(err);
-                        return callback(modele.InitizializeBadAnwser(error.operationFailled));
+                        callback(null,error.unavailable_ressources);
                     }
                       userDto.InitizializeFromFacebook(res.body,urlPictureFacebook);
 
                       var response =  userDto.toJson();
                       utils.logDebug("adduser() dernier appel ! "+JSON.stringify(response));
-                      callback(response);
+                      callback(response,error.succes_request);
                   });
               });
             }
@@ -79,7 +79,7 @@ function controllerUtilisateur(){
       databasePostgres.postgres.connect(databaseConfig.PostGre.url, function(err, client, done){
 
                   if(err) {
-                      return callback(modele.InitizializeBadAnwser(error.operationFailled));
+                      callback(null,error.unavailable_ressources);
                   }
 
                   client.query(deleteQuery, function(err, result){
@@ -89,13 +89,12 @@ function controllerUtilisateur(){
                           console.error("An uncaughtException was found, the program will end. " + err + ", stacktrace: " + err.stack);
                           return callback({"success":"false","error":err.stack});
                       }
-                      callback({"success":"true","error":"No"});
+                      callback(null,error.succes_request);
               });
         });
     }    
 
-    this.updateLocation = function (UserDto,callback){
-
+    this.updateLocation = function (UserDto,callback) {
        utils.logInfo("yolo(), updateUser , updateLocation()");
     }
     
@@ -103,7 +102,7 @@ function controllerUtilisateur(){
 
        utils.logInfo("controllerUtilisateur(), update User , updateUser()");
        var myDate = new Date(UserDto.birthdate)
-    	 var updateQuery = "update usertable set (lastname,firstname,description,birthdate) = ('"+UserDto.lastname+"','"+UserDto.firstname+"','"
+       var updateQuery = "update usertable set (lastname,firstname,description,birthdate) = ('"+UserDto.lastname+"','"+UserDto.firstname+"','"
                           +UserDto.descrition +"','"+utils.dateUtilsToString(UserDto.birthdate)+"')where idapiconnection = "+UserDto.idApiConnection+ ";";
       utils.logDebug("removeUser()"+updateQuery);
       databasePostgres.postgres.connect(databaseConfig.PostGre.url, function(err, client, done){
@@ -113,17 +112,18 @@ function controllerUtilisateur(){
           }
           client.query(updateQuery, function(err, result){
             done();
+              // if there are some errors during the connexion.
               if(err) {
                   utils.logError("Controleur User : updateUser() :" + err + ", stacktrace: " + err.stack);
-                  return callback(modele.InitizializeBadAnwser(error.operationFailled));
+                  callback(null,error.unavailable_ressources);
               }
+              // if there are some errors during the connexion.
               else{
-                return callback(modele.InitizializeGoodAnwser());
+                callback(null,error.succes_request);
               }
           });
-        }); 
+      }); 
     }
-
 
     var buildRequestFacebook = function(id , accessToken){
         return modele.urlFacebook + id +"?fields="+ modele.filedsFacebook +"&access_token="+ accessToken +"&height=500&width=500"; 
