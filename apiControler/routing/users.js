@@ -18,7 +18,7 @@ router.route("/")
         // if the body of the request is defined we can rtry to add user
 	    if(req.body != undefined){
             // We call user Control with the callback method json to send a Json
-    		userControler.addUser(req.body,function(reponse, htmlCode=200){
+    		userControler.addUser(req.body,function(reponse, htmlCode){
   				res.status(htmlCode).json(reponse);
   			});
     	}
