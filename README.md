@@ -7,7 +7,7 @@ This is the server used for the course software engineering given at epfl
 
 # TODO 
 
-- [x] Sequelize (settle the ORM)
+- [x] Sequelize (use the ORM)
 - [ ] Finish user Api.
 - [ ] Api Music. 
 - [ ] Search people around.
