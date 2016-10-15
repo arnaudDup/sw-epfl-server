@@ -36,18 +36,21 @@ function controllerUtilisateur(){
                 User.sync({force: false}).then(function () {
 
                   var createUser =  User.create({
-                          idapiconnection : res.body.id, 
-                          lastName : res.body.last_name,
+                          idApiConnection : res.body.id, 
+                          lastname : res.body.last_name,
                           firstname: res.body.first_name,
                           email : res.body.email,
                           //birthdate : res.body.birthday,
-                          profilepicture : urlPictureFacebook,
-                          coverpicture : res.body.cover.source
+                          profilePicture : urlPictureFacebook,
+                          backgroundPicture : res.body.cover.source
 
                   // callback if the user srequest succeed.
                   }).then(function(createUser) {
                           utils.logInfo("controllerUtilisateur(), the request succeed");
-                          callback(createUser.dataValues,setting.htmlCode.succes_request);
+                          
+                          // remove the id in oder to keep only adiApi facebook
+                          delete createUser.dataValues['id']
+                          callback(createUser,setting.htmlCode.succes_request);
 
                   // return a 500 code if the request is null.
                   }).catch(function(error) {

@@ -9,15 +9,15 @@ function BaseDeDonnee()
     this.sequelize = new Sequelize(databaseConfig.PostGre.url);
 
     // create the schema of the user.
-    this.User = this.sequelize.define('usertableSequlize', {
-          idapiconnection: Sequelize.BIGINT,
+    this.User = this.sequelize.define('user', {
+          idApiConnection: Sequelize.BIGINT,
           firstname : Sequelize.STRING,
           email: Sequelize.STRING,
           birthdate: Sequelize.DATE,
-          profilepicture : Sequelize.STRING,
-          coverpicture: Sequelize.STRING,
-          description: Sequelize.STRING,
-          lastName: Sequelize.STRING
+          backgroundPicture : Sequelize.STRING,
+          profilePicture: Sequelize.STRING,
+          descrition: Sequelize.STRING,
+          lastname: Sequelize.STRING
       },{
           timestamps: false
     })
