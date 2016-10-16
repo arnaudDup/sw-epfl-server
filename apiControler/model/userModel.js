@@ -50,6 +50,7 @@ function controllerUtilisateur(){
                           
                           // remove the id in oder to keep only adiApi facebook
                           delete createUser.dataValues['id']
+                          delete createUser.dataValues['email']
                           callback(createUser,setting.htmlCode.succes_request);
 
                   // return a 500 code if the request is null.
