@@ -70,8 +70,6 @@ describe('Test User API', () => {
               .delete('/api/Users/'+userTest.id)
               .end((err, res) => {
                   res.should.have.status(200);
-                  res.body.should.be.a('array');
-                  res.body.length.should.be.eql(0);
                 done();
               });
         });
@@ -87,8 +85,6 @@ describe('Test User API', () => {
               .post('/api/Users/'+userTest.id)
               .end((err, res) => {
                   res.should.have.status(200);
-                  res.body.should.be.a('array');
-                  res.body.length.should.be.eql(0);
                 done();
               });
         });

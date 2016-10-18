@@ -8,6 +8,9 @@ var server = require('../app');
 var utils = require('../apiControler/utils/Utils.js');
 var should = chai.should();
 
+// import model form the ORM
+var User = require('../apiControler/database/SequelizeORM.js').User;
+
 chai.use(chaiHttp);
 
 //Our parent block
@@ -19,8 +22,8 @@ describe('Test User API', () => {
        done();
     });
 
- describe('get user', () => {
-        it('should get a user', (done) => {
+ describe('create user', () => {
+        it('should create a user', (done) => {
           chai.request(server)
             .post('/api/Users')
             .field("id",10211410486004808)
@@ -39,9 +42,9 @@ describe('Test User API', () => {
 
     // After each test we remove each test we insert a user. 
     afterEach((done) => { 
-        utils.logInfo("After testing(), removal of a user of an user");
-        // TODO remove users 
-        done();
+       User.dropAllSchemas().then(function () {
+            log.info("remove all schema")
+        });
     });
 
 

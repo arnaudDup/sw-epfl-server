@@ -25,50 +25,82 @@ function controllerUtilisateur(){
            callback(null,setting.htmlCode.unavailable_ressources);
           }
           else {
-                // make an JsonObject.
-                res.body  = JSON.parse(res.body); 
-                // build the url to get the picture
-                var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
-
-                utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
-
-                // Insert the new user in the database .
-                User.sync({force: false}).then(function () {
-
-                  var createUser =  User.create({
-                          idApiConnection : res.body.id, 
-                          lastname : res.body.last_name,
-                          firstname: res.body.first_name,
-                          email : res.body.email,
-                          //birthdate : res.body.birthday,
-                          profilePicture : urlPictureFacebook,
-                          backgroundPicture : res.body.cover.source
-
-                  // callback if the user srequest succeed.
-                  }).then(function(createUser) {
-                          utils.logInfo("controllerUtilisateur(), the request succeed");
-                          
-                          // remove the id in oder to keep only adiApi facebook
-                          delete createUser.dataValues['id']
-                          delete createUser.dataValues['email']
-                          callback(createUser,setting.htmlCode.succes_request);
-
-                  // return a 500 code if the request is null.
-                  }).catch(function(error) {
-                       utils.logInfo("controllerUtilisateur(), the request fail");
-                      callback(null,setting.htmlCode.unavailable_ressources);
-                  })
-
-               });
+                createUser(res,callback);
             }
 
         })
     };
 
+  // private method, allow to create a specific user by the object given by facebook.
+  var createUser = function(res,callback){
+                  // make an JsonObject.
+          res.body  = JSON.parse(res.body); 
+          // build the url to get the picture
+          var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
+
+          utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+
+          // Insert the new user in the database .
+          User.sync({force: false}).then(function () {
+
+                var createUser =  User.create({
+                        idApiConnection : res.body.id, 
+                        lastname : res.body.last_name,
+                        firstname: res.body.first_name,
+                        email : res.body.email,
+                        //birthdate : res.body.birthday,
+                        profilePicture : urlPictureFacebook,
+                        backgroundPicture : res.body.cover.source
+
+                // callback if the user srequest succeed.
+                }).then(function(createUser) {
+                        utils.logInfo("controllerUtilisateur(), the request succeed");
+                        
+                        // remove the id in oder to keep only adiApi facebook
+                        delete createUser.dataValues['id']
+                        callback(createUser,setting.htmlCode.succes_request);
+
+                // return a 500 code if the request is null.
+                }).catch(function(error) {
+                     utils.logInfo("controllerUtilisateur(), the request fail");
+                    callback(null,setting.htmlCode.unavailable_ressources);
+                })
+
+           });
+    }
+
+
+  // private method, allow to get a specific user designed by api connection.
+  var getUserByIdConnection = function(idApi,callback){
+
+      var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
+      utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+
+      User.sync().then(function () {
+
+         var getUser =  User.findOne({
+              where: {
+                idApiConnection: idApi
+              }
+
+            }).then(function(getUser) {
+
+                utils.logError("request succeed"+idApi)
+                callback(getUser.dataValues,setting.htmlCode.succes_request);
+
+            }).catch(function(error) {
+
+                utils.logError("error getting user : "+idApi)
+                callback(null,setting.htmlCode.unavailable_ressources);
+            });
+        });
+    }
+
 
     this.updateInformationFacebook = function (body,callback)
     {     
         utils.logDebug("adduser()"+JSON.stringify(buildRequestFacebook(body.id,body.accesToken)));
+
         // GET the user description by doing a post on facebook API.
         unirest.get(buildRequestFacebook(body.id,body.accesToken)).end(function(res){
 
@@ -84,29 +116,39 @@ function controllerUtilisateur(){
 
                 utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
-               // We synchronize with the databse in order to change the name and the 
-               User.sync({force: false}).then(function () {
 
-                    var CreateUser =  User.update({
+               // We synchronize with the databse in order to change the name and the 
+               User.sync().then(function () {
+
+                     var CreateUser =  User.update({
                           email : res.body.email,
-                          profilepicture : urlPictureFacebook,
-                          coverpicture : res.body.cover.source
+                          profilePicture : urlPictureFacebook,
+                          backgroundPicture : res.body.cover.source
                       }, 
                       {
                       where: {
-                                idapiconnection: res.body.id
+                                idApiConnection: res.body.id
                              }
                   // callback if the user srequest succeed.
                   }).then(function(CreateUser) {
-
-                       // TODO get the user back !! :)
                       utils.logInfo("controllerUtilisateur(), the request succeed");
-                      callback(CreateUser,setting.htmlCode.succes_request);
 
-                  // return a 500 code if the request is null.
+                      // We don't find any users with the id, we need to add the new user
+                      // to the database.
+                      if(CreateUser[0] == 0){
+                        utils.logInfo("creation d'un nouveau utilisateur");
+                        createUser(res,callback);
+                      }
+                      // We get the user in the database and send to the client. 
+                      else{
+                          utils.logInfo("get the user freshly updated");
+                          getUserByIdConnection(res.body.id,callback);
+                      }
+
+                  // if there is any error in computing value for user.
                   }).catch(function(error) {
                        utils.logInfo("controllerUtilisateur(), the request fail");
-                      callback(null,setting.htmlCode.unavailable_ressources);
+                       callback(null,setting.htmlCode.unavailable_ressources);
                   })
 
               });
@@ -115,13 +157,10 @@ function controllerUtilisateur(){
         })
     };
 
-
     this.getUser = function(idApi,callback){
       utils.logInfo("controllerUtilisateur(), get user "+idApi+", getUser()");
-
-
+      getUserByIdConnection(idApi,callback)
     }  
-
 
     this.removeUser = function(idApi,callback){
 
@@ -146,6 +185,7 @@ function controllerUtilisateur(){
 
       });
     }    
+
 
     this.updateLocation = function (UserDto,callback) {
        utils.logInfo("yolo(), updateUser , updateLocation()");
