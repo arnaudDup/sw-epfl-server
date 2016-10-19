@@ -14,23 +14,6 @@ var User = require('../database/SequelizeORM.js').User;
 // Définition de l'objet controllerUtilisateur
 function controllerUtilisateur(){
 
-    this.addUser = function (body,callback)
-    {   	
-        utils.logDebug("adduser()"+JSON.stringify(buildRequestFacebook(body.id,body.accesToken)));
-        // GET the user description by doing a post on facebook API.
-        unirest.get(buildRequestFacebook(body.id,body.accesToken)).end(function(res){
-
-          // We can't reach the facebook graph.
-          if (res.error) {
-           callback(null,setting.htmlCode.unavailable_ressources);
-          }
-          else {
-                createUser(res,callback);
-            }
-
-        })
-    };
-
   // private method, allow to create a specific user by the object given by facebook.
   var createUser = function(res,callback){
                   // make an JsonObject.
