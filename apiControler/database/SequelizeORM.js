@@ -12,7 +12,7 @@ function BaseDeDonnee()
     this.User = this.sequelize.define('users', {
           idApiConnection: {
             type: Sequelize.BIGINT,
-            unique: 'unique_api_connection'
+            //unique: 'unique_api_connection'
           },
           firstname : Sequelize.STRING,
           email: Sequelize.STRING,
