@@ -16,12 +16,10 @@ function controllerUtilisateur(){
 
   // private method, allow to create a specific user by the object given by facebook.
   var createUser = function(res,callback){
-                  // make an JsonObject.
-          res.body  = JSON.parse(res.body); 
+
           // build the url to get the picture
           var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
-
-          utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+          utils.logInfo("createUser(), insertion or geetin a user");
 
           // Insert the new user in the database .
           User.sync({force: false}).then(function () {
@@ -37,15 +35,14 @@ function controllerUtilisateur(){
 
                 // callback if the user srequest succeed.
                 }).then(function(createUser) {
-                        utils.logInfo("controllerUtilisateur(), the request succeed");
-                        
+                        utils.logInfo("createUser(), the request succeed");
                         // remove the id in oder to keep only adiApi facebook
                         delete createUser.dataValues['id']
                         callback(createUser,setting.htmlCode.succes_request);
 
                 // return a 500 code if the request is null.
                 }).catch(function(error) {
-                     utils.logInfo("controllerUtilisateur(), the request fail");
+                     utils.logInfo("createUser(), the request fail");
                     callback(null,setting.htmlCode.unavailable_ressources);
                 })
 
@@ -69,6 +66,7 @@ function controllerUtilisateur(){
             }).then(function(getUser) {
 
                 utils.logError("request succeed"+idApi)
+                delete getUser.dataValues['id']
                 callback(getUser.dataValues,setting.htmlCode.succes_request);
 
             }).catch(function(error) {
@@ -80,7 +78,7 @@ function controllerUtilisateur(){
     }
 
 
-    this.updateInformationFacebook = function (body,callback)
+    this.updateGetInformationUser = function (body,callback)
     {     
         utils.logDebug("adduser()"+JSON.stringify(buildRequestFacebook(body.id,body.accesToken)));
 
@@ -97,11 +95,11 @@ function controllerUtilisateur(){
                 // build the url to get the picture
                 var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
 
-                utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+                utils.logInfo("updateGetInformationUser(), insertion or geetin a user, adduser()");
 
 
                // We synchronize with the databse in order to change the name and the 
-               User.sync().then(function () {
+               User.sync({}).then(function () {
 
                      var CreateUser =  User.update({
                           email : res.body.email,
@@ -114,7 +112,7 @@ function controllerUtilisateur(){
                              }
                   // callback if the user srequest succeed.
                   }).then(function(CreateUser) {
-                      utils.logInfo("controllerUtilisateur(), the request succeed");
+                      utils.logInfo("updateGetInformationUser(), the request succeed");
 
                       // We don't find any users with the id, we need to add the new user
                       // to the database.
@@ -130,7 +128,7 @@ function controllerUtilisateur(){
 
                   // if there is any error in computing value for user.
                   }).catch(function(error) {
-                       utils.logInfo("controllerUtilisateur(), the request fail");
+                       utils.logInfo("updateGetInformationUser(), the request fail"+error);
                        callback(null,setting.htmlCode.unavailable_ressources);
                   })
 

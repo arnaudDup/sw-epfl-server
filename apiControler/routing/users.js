@@ -18,7 +18,7 @@ router.route("/")
         // if the body of the request is defined we can rtry to add user
 	    if(req.body != undefined){
             // We call user Control with the callback method json to send a Json
-    		userControler.updateInformationFacebook(req.body,function(reponse, htmlCode){
+    		userControler.updateGetInformationUser(req.body,function(reponse, htmlCode){
   				res.status(htmlCode).json(reponse);
   			});
     	}
@@ -91,26 +91,5 @@ router.route("/around/:id")
         }
 
     });
-
-
-// get a user by his id
-router.route("/updateInformationsFace")
-
-    .post(function(req,res)
-    {
-        utils.logInfo(" routing.user(), update Picture user ");
-        utils.logDebug(" routing.user()" + JSON.stringify(req.body));
-        // if the body of the request is defined we can rtry to add user
-        if(req.body != undefined){
-            // We call user Control with the callback method json to send a Json
-            userControler.updateInformationFacebook(req.body,function(reponse, htmlCode){
-                res.status(htmlCode).json(reponse);
-            });
-        }
-        else {
-           res.status(error.bad_request).json(null);
-        }
-    })
-
 
 module.exports = router;
