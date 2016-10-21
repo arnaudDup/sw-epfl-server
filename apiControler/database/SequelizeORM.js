@@ -20,7 +20,10 @@ function BaseDeDonnee()
           backgroundPicture : Sequelize.STRING,
           profilePicture: Sequelize.STRING,
           descrition: Sequelize.STRING,
-          lastname: Sequelize.STRING
+          lastname: Sequelize.STRING,
+          lattitude : Sequelize.REAL,
+          longitude : Sequelize.REAL,
+
       },{
           timestamps: false
     })

@@ -138,6 +138,43 @@ function controllerUtilisateur(){
         })
     };
 
+  this.getUsersAround = function(UserObject,callback){
+      utils.logInfo("getUsersAround()");
+      utils.logInfo(UserObject);
+
+      // We synchronize with the databse in order to change the name and the 
+       User.sync({force: false}).then(function () {
+
+            var updateUser =  User.update({
+                lattitute : UserObject.lattitude,
+                longitude : UserObject.longitude,
+              }, 
+              {
+              where: {
+                        idApiConnection: UserObject.idApiConnection
+                     }
+          // callback if the user srequest succeed.
+          }).then(function(updateUser) {
+
+              if(updateUser[0] == 0){
+                utils.logInfo("creation d'un nouveau utilisateur");
+                callback(null,setting.htmlCode.unavailable_ressources);
+              }
+              // We get the user in the database and send to the client. 
+              else{
+                  utils.logInfo("I'am update the user");
+                  getUserByIdConnection(UserObject.idApiConnection,callback);
+              }
+          }).catch(function(error) {
+               utils.logInfo("controllerUtilisateur(), the request fail");
+                callback(null,setting.htmlCode.unavailable_ressources);
+          })
+
+      });
+
+
+    }  
+
     this.getUser = function(idApi,callback){
       utils.logInfo("controllerUtilisateur(), get user "+idApi+", getUser()");
       getUserByIdConnection(idApi,callback)
@@ -167,10 +204,6 @@ function controllerUtilisateur(){
       });
     }    
 
-
-    this.updateLocation = function (UserDto,callback) {
-       utils.logInfo("yolo(), updateUser , updateLocation()");
-    }
     
     this.updateUser = function (UserDto,callback){
 
