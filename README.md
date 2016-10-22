@@ -9,10 +9,8 @@ This is the server used for the course software engineering given at epfl
 
 - [x] Sequelize (use the ORM)
 - [ ] Finish user Api.
-- [ ] Api Music. 
+- [ ] Music Api. 
 - [ ] Search people around.
 - [ ] Message
-- [ ] Test User Api
-- [ ] Test Music
-- [ ] Test Message
-- [ ] Comet Haley
+- [x] Test User Api
+- [ ] Test Music Api
