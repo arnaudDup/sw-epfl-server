@@ -4,7 +4,7 @@ var unirest = require('unirest');
 var util = require('util');
 var setting = require('../../setting/error.js');
 var databaseConfig = require('../../setting/database.js');
-var userDto = require ('../object/user.js')
+var userManipulation = require ('../object/user.js')
 var utils = require('../utils/Utils.js');
 
 // database
@@ -20,7 +20,7 @@ function controllerUtilisateur(){
           // build the url to get the picture
           var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
           utils.logInfo("createUser(), insertion or geetin a user");
-
+          var UserAge = userManipulation.computeAge(res.body.birthday);
           // Insert the new user in the database .
           User.sync({force: false}).then(function () {
 
@@ -29,7 +29,7 @@ function controllerUtilisateur(){
                         lastname : res.body.last_name,
                         firstname: res.body.first_name,
                         email : res.body.email,
-                        //birthdate : res.body.birthday,
+                        age : UserAge,
                         profilePicture : urlPictureFacebook,
                         backgroundPicture : res.body.cover.source
 
@@ -38,11 +38,12 @@ function controllerUtilisateur(){
                         utils.logInfo("createUser(), the request succeed");
                         // remove the id in oder to keep only adiApi facebook
                         delete createUser.dataValues['id']
-                        callback(createUser,setting.htmlCode.succes_request);
+                        var response = userManipulation.transformResponseClient(createUser);
+                        callback(response,setting.htmlCode.succes_request);
 
                 // return a 500 code if the request is null.
                 }).catch(function(error) {
-                     utils.logInfo("createUser(), the request fail");
+                     utils.logInfo("createUser(), the request fail" +error);
                     callback(null,setting.htmlCode.unavailable_ressources);
                 })
 
@@ -52,6 +53,34 @@ function controllerUtilisateur(){
 
   // private method, allow to get a specific user designed by api connection.
   var getUserByIdConnection = function(idApi,callback){
+
+      var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
+
+      utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
+      User.sync().then(function () {
+
+        // select query.
+         var getUser =  User.findOne({
+              where: {
+                idApiConnection: idApi
+              }
+
+            }).then(function(getUser) {
+
+                utils.logInfo("request succeed"+idApi)
+                delete getUser.dataValues['id']
+                var response = userManipulation.transformResponseClient(getUser.dataValues);
+                callback(response,setting.htmlCode.succes_request);
+
+            }).catch(function(error) {
+                utils.logError("error getting user : "+error)
+                callback(null,setting.htmlCode.unavailable_ressources);
+            });
+        });
+    }
+
+  // private method, allow to get a specific user designed by api connection.
+  var getUserAroundByRadius = function(idApi,callback){
 
       var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
@@ -67,7 +96,9 @@ function controllerUtilisateur(){
 
                 utils.logError("request succeed"+idApi)
                 delete getUser.dataValues['id']
-                callback(getUser.dataValues,setting.htmlCode.succes_request);
+                var user1 = userManipulation.transformResponseClient(getUser.dataValues);
+                var testUser = [user1,user1]
+                callback(testUser,setting.htmlCode.succes_request);
 
             }).catch(function(error) {
 
@@ -146,7 +177,7 @@ function controllerUtilisateur(){
        User.sync({force: false}).then(function () {
 
             var updateUser =  User.update({
-                lattitute : UserObject.lattitude,
+                lattitude : UserObject.lattitude,
                 longitude : UserObject.longitude,
               }, 
               {
@@ -157,13 +188,13 @@ function controllerUtilisateur(){
           }).then(function(updateUser) {
 
               if(updateUser[0] == 0){
-                utils.logInfo("creation d'un nouveau utilisateur");
+                utils.logInfo("The User does not exist !");
                 callback(null,setting.htmlCode.unavailable_ressources);
               }
               // We get the user in the database and send to the client. 
               else{
                   utils.logInfo("I'am update the user");
-                  getUserByIdConnection(UserObject.idApiConnection,callback);
+                  getUserAroundByRadius(UserObject.idApiConnection,callback);
               }
           }).catch(function(error) {
                utils.logInfo("controllerUtilisateur(), the request fail");
@@ -223,7 +254,8 @@ function controllerUtilisateur(){
           }).then(function(updateUser) {
                   utils.logInfo("controllerUtilisateur(), the request succeed");
                   callback(null,setting.htmlCode.succes_request);
-                            // return a 500 code if the request is null.
+
+          // return a 500 code if the request is null.
           }).catch(function(error) {
                utils.logInfo("controllerUtilisateur(), the request fail");
               callback(null,setting.htmlCode.unavailable_ressources);

@@ -4,10 +4,10 @@ module.exports = {
 	'PostGre' : 
 	{
 		//Dusan database
-		'url' : 'postgres://dbuuqcwxzrumyj:OClLAyZu3_R56baEsYJLzRSWh1@ec2-54-243-249-154.compute-1.amazonaws.com:5432/d8bhs2kp34o076'
+		//'url' : 'postgres://dbuuqcwxzrumyj:OClLAyZu3_R56baEsYJLzRSWh1@ec2-54-243-249-154.compute-1.amazonaws.com:5432/d8bhs2kp34o076'
 		
 		// Dev
-		//'url' :	'postgres://hqidddsrxrsrmq:UCE1jpfsbtTjEvDvIbi3vjtYWA@ec2-79-125-5-94.eu-west-1.compute.amazonaws.com:5432/d29kp6nnt5d9be'
+		'url' :	'postgres://hqidddsrxrsrmq:UCE1jpfsbtTjEvDvIbi3vjtYWA@ec2-79-125-5-94.eu-west-1.compute.amazonaws.com:5432/d29kp6nnt5d9be'
 	},
 
 	// Setting PostGres environnement for testing.
