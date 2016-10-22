@@ -5,8 +5,19 @@ var Sequelize = require('sequelize');
 
 function BaseDeDonnee()
 {
-    
-    this.sequelize = new Sequelize(databaseConfig.PostGre.url);
+          // first we select on wich database we are going to work.
+      var urlDatabase = null
+      if(process.env.NODE_ENV !== 'test') {
+          utils.logInfo("Postgres.Database(), run in normal configuration");
+          urlDatabase = databaseConfig.PostGre.url
+      }
+      else {
+          utils.logInfo("Postgres.Database(), run for test configuration");
+          urlDatabase = databaseConfig.PostGreTest.url
+      }
+
+      utils.logInfo("Sequelize database connected to: "+urlDatabase);
+      this.sequelize = new Sequelize(urlDatabase);
 
     // create the schema of the user.
     this.User = this.sequelize.define('Users', {
@@ -19,7 +30,7 @@ function BaseDeDonnee()
           age                 : Sequelize.INTEGER,
           backgroundPicture   : Sequelize.STRING,
           profilePicture      : Sequelize.STRING,
-          descrition          : Sequelize.STRING,
+          description          : Sequelize.STRING,
           lastname            : Sequelize.STRING,
           lattitude           : Sequelize.REAL,
           longitude           : Sequelize.REAL,

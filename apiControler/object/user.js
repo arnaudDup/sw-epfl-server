@@ -12,12 +12,9 @@ function UserDto()
                      'longitude' : UserObject.longitude
                    }
 
-        utils.logInfo(locationUser)
 
         delete UserObject['lattitude']
         delete UserObject['longitude']
-
-        utils.logInfo(UserObject)
 
         UserObject.location = locationUser;
         utils.logInfo("transformResponseClient(), return response")
@@ -32,7 +29,7 @@ function UserDto()
         }
 
         var userBirthDate = new Date(birthdate)
-        var age = Math.floor( ((new Date).getTime()-userBirthDate.getTime()) / (365.24*24*3600*1000) );
+        var age = Math.floor( ((new Date).getTime()-userBirthDate.getTime()) / (365.24*24*3600*1000));
         return age;
     }
 

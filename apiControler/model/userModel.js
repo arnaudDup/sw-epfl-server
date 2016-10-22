@@ -60,7 +60,6 @@ function controllerUtilisateur(){
 
       utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
       User.sync().then(function () {
-
         // select query.
          var getUser =  User.findOne({
               where: {
@@ -222,22 +221,22 @@ function controllerUtilisateur(){
 
     this.removeUser = function(idApi,callback){
 
-       User.sync({force: false}).then(function () {
+       User.sync().then(function () {
 
            // delete the user.
            var deleteUser =  User.destroy({
                   where: {
-                    idapiconnection: idApi
+                    idApiConnection: idApi
                   }
 
           // callback if the user srequest succeed.
-          }).then(function(createUser) {
+          }).then(function(deleteUser) {
                   utils.logInfo("controllerUtilisateur(), the request succeed");
                   callback(null,setting.htmlCode.succes_request);
 
           // return a 500 code if the request is null.
           }).catch(function(error) {
-               utils.logInfo("controllerUtilisateur(), the request fail");
+               utils.logInfo("controllerUtilisateur(), the request fail"+error);
               callback(null,setting.htmlCode.unavailable_ressources);
           })
 
@@ -245,7 +244,7 @@ function controllerUtilisateur(){
     }    
 
     
-    this.updateUser = function (UserDto,callback){
+    this.updateUser = function (idApi,UserDto,callback){
 
       // We synchronize with the databse in order to change the name and the 
        User.sync({force: false}).then(function () {
@@ -253,11 +252,11 @@ function controllerUtilisateur(){
             var updateUser =  User.update({
                 lastname: UserDto.lastname,
                 firstname : UserDto.firstname,
-                description: UserDto.descrition,
+                description: UserDto.description,
               }, 
               {
               where: {
-                        idapiconnection: UserDto.idApiConnection
+                        idApiConnection: idApi
                      }
           // callback if the user srequest succeed.
           }).then(function(updateUser) {
@@ -266,7 +265,7 @@ function controllerUtilisateur(){
 
           // return a 500 code if the request is null.
           }).catch(function(error) {
-               utils.logInfo("controllerUtilisateur(), the request fail");
+               utils.logInfo("controllerUtilisateur(), the request fail"+error);
               callback(null,setting.htmlCode.unavailable_ressources);
           })
 

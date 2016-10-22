@@ -7,45 +7,88 @@ var chaiHttp = require('chai-http');
 var server = require('../app');
 var utils = require('../apiControler/utils/Utils.js');
 var should = chai.should();
+var setting = require('../setting/error.js');
 
 // import model form the ORM
 var User = require('../apiControler/database/SequelizeORM.js').User;
 
 chai.use(chaiHttp);
 
+ // ----------------------------------------------   DEFINE USEFUL CONSTANT  -----------------------------------------
+var userTest = {
+
+          "email": "etienne.husler@epfl.ch",
+          "id" : "121620614972695",
+          "firstname": "Sweng",
+          "lastname": "Tests",
+          "profilePicture": "https://graph.facebook.com/121620614972695/picture?height=500&width=500",
+          "backgroundPicture": "https://graph.facebook.com/121620614972695/picture?height=500&width=500"
+  }
+
+var FAKE_ID = 1; 
+ // ----------------------------------------------   TEST  -----------------------------------------
+
 //Our parent block
 describe('Test User API', () => {
 
     // Before each test we insert a user. 
-    beforeEach((done) => { 
-       utils.logInfo("Before testing(), insertion of an user");
-       done();
+    before((done) => { 
+          // We rfroce to recreate the table User.
+          User.sync({force: true}).then(function () {done();});
     });
+
+
+ // ----------------------------------------------   Create User -----------------------------------------
+ describe('create user', () => {
+        it('should create a user', (done) => {
+          chai.request(server)
+            .post('/api/Users')
+            .send({"id":userTest.id,
+                    "accesToken":"EAAOZCzloFDqEBAHGnY8Q6I4d6fJRy9c6FWYZAqNxp2ChFBvpv8ZAycQC7a0oT21ZBp0KuIbZCIUkLWSH4Ev7pI"+
+                    "QrjlzAxvrfznhXZAeb8A3ZCZBDks8WekNs4WgtfteZCMhUPQx5ZBPmbBMfwBgjqqAeaHOjtYFe38VYfXV35ZCnQ0yZBzPSDzCKDBBMkGhWA8ZAyrJAcBZA6LCi5XtgZDZD"
+              })
+              .end((err, res) => {
+                    res.should.have.status(setting.htmlCode.succes_request);
+
+                       // select query.
+                       var getUser =  User.findOne({
+                            where: {
+                              idApiConnection: userTest.id
+                            }
+                          }).then(function(getUser) {
+                            
+                              // test the new value of the User.
+                              chai.assert.equal(getUser.idApiConnection, userTest.id, 'id should be equals');
+                              chai.assert.equal(getUser.firstname, userTest.firstname, 'firstName should be equals');
+                              chai.assert.equal(getUser.lastname, userTest.lastname, 'lastname should be equals');
+                              chai.assert.equal(res.text.backgroundPicture, userTest.backgroundPicture, 'backkground picture should be equals');
+                              chai.assert.equal(res.text.profilePicture, userTest.profilePicture, 'profile picture should be equals');
+                              done();
+
+                          }).catch(function(error) {
+                             utils.logInfo("Updateuser(), the request fail" +error);
+                             chai.assert.isOk(false, 'impossible to add user');
+                             done();
+                          });
+                    done();
+              });
+        });
+    });
+
 
  describe('create user', () => {
         it('should create a user', (done) => {
           chai.request(server)
             .post('/api/Users')
-            .field("id",10211410486004808)
-            .field("accesToken","EAAOZCzloFDqEBALJ3TCa6x0vPb0pCXDXiA5RpBK4yaMTcX9qpZB9ffvW9nJ6hyUMCorMbVs0MLyMbrtf2iAOYmUP36RcdlcvXGs7KZBAexmtAUAjZApNX0FmYQS1rIRRlZBoLaiJujNtUJu5mZCk6PaPPWw5DnJtjTSiU3ZBlxxDv5WDFmwyS1IIf7Xu9MgCNijsO0V4htawAZDZD")
+            .send({"id":FAKE_ID,
+                    "accesToken":"EAAOZCzloFDqEBAHGnY8Q6I4d6fJRy9c6FWYZAqNxp2ChFBvpv8ZAycQC7a0oT21ZBp0KuIbZCIUkLWSH4Ev7pI"+
+                    "QrjlzAxvrfznhXZAeb8A3ZCZBDks8WekNs4WgtfteZCMhUPQx5ZBPmbBMfwBgjqqAeaHOjtYFe38VYfXV35ZCnQ0yZBzPSDzCKDBBMkGhWA8ZAyrJAcBZA6LCi5XtgZDZD"
+              })
               .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('idApiconnexion').eql('10211410486004808');
-                    res.body.should.have.property('firstname').eql('arnaud');
-                    res.body.should.have.property('lastname').eql('dupeyrat');
+                    res.should.have.status(setting.htmlCode.unavailable_ressources);
                     done();
               });
         });
     });
   
-
-
-    // After each test we remove each test we insert a user. 
-    afterEach((done) => { 
-       User.dropAllSchemas().then(function () {
-            log.info("remove all schema")
-        });
-    });
-
-
 });

@@ -61,10 +61,10 @@ router.route("/:id")
     // Update user information.
     .put(function(req,res)
     {
-        utils.logInfo("routing.user(), post to update user");
+        utils.logInfo("routing.user(), put to update user");
         utils.logDebug("routing.user()"+JSON.stringify(req.body));
-        if(req.body != undefined){
-            userControler.updateUser(req.body,function(reponse, htmlCode){
+        if(req.body != undefined && typeof(req.params.id) != 'undefined'){
+            userControler.updateUser(req.params.id,req.body,function(reponse, htmlCode){
                 res.status(htmlCode).json(reponse);
             });
         }
