@@ -15,12 +15,14 @@ var User = require('../database/SequelizeORM.js').User;
 function controllerUtilisateur(){
 
   // private method, allow to create a specific user by the object given by facebook.
-  var createUser = function(res,callback){
+  var createUser = function(res,backgroundPict,callback){
 
           // build the url to get the picture
           var urlPictureFacebook = "https://graph.facebook.com/"+res.body.id+"/picture?height=500&width=500"; 
           utils.logInfo("createUser(), insertion or geetin a user");
           var UserAge = userManipulation.computeAge(res.body.birthday);
+
+
           // Insert the new user in the database .
           User.sync({force: false}).then(function () {
 
@@ -31,7 +33,7 @@ function controllerUtilisateur(){
                         email : res.body.email,
                         age : UserAge,
                         profilePicture : urlPictureFacebook,
-                        backgroundPicture : res.body.cover.source
+                        backgroundPicture : backgroundPict
 
                 // callback if the user srequest succeed.
                 }).then(function(createUser) {
@@ -128,6 +130,13 @@ function controllerUtilisateur(){
 
                 utils.logInfo("updateGetInformationUser(), insertion or geetin a user, adduser()");
 
+                var backgroundPict
+                if (res.body.cover ==  undefined){
+                  backgroundPict = "https://graph.facebook.com/"+121620614972695+"/picture?height=500&width=500"
+                }
+                else{
+                  backgroundPict =  res.body.cover.source
+                }
 
                // We synchronize with the databse in order to change the name and the 
                User.sync({}).then(function () {
@@ -135,7 +144,7 @@ function controllerUtilisateur(){
                      var CreateUser =  User.update({
                           email : res.body.email,
                           profilePicture : urlPictureFacebook,
-                          backgroundPicture : res.body.cover.source
+                          backgroundPicture : backgroundPict
                       }, 
                       {
                       where: {
@@ -149,7 +158,7 @@ function controllerUtilisateur(){
                       // to the database.
                       if(CreateUser[0] == 0){
                         utils.logInfo("creation d'un nouveau utilisateur");
-                        createUser(res,callback);
+                        createUser(res,backgroundPict,callback);
                       }
                       // We get the user in the database and send to the client. 
                       else{

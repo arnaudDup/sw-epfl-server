@@ -27,6 +27,10 @@ function UserDto()
     this.computeAge = function (birthdate) {
 
         utils.logInfo(birthdate);
+        if(birthdate == undefined){
+            return 0
+        }
+
         var userBirthDate = new Date(birthdate)
         var age = Math.floor( ((new Date).getTime()-userBirthDate.getTime()) / (365.24*24*3600*1000) );
         return age;
