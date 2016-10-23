@@ -1,5 +1,4 @@
 // Récupération du Modèle
-var modele  = require('./response.js');
 var unirest = require('unirest');
 var util = require('util');
 var setting = require('../../setting/error.js');
@@ -10,6 +9,13 @@ var utils = require('../utils/Utils.js');
 // database
 var databasePostgres = require('../database/postgres.js');
 var User = require('../database/SequelizeORM.js').User;
+
+//---------------------------------- DEFINE CONSTANT ------------------------------------
+
+var URL_FACEBOOK = "https://graph.facebook.com/";
+var FIELDS_FACEBOOK = 'email,cover,birthday,first_name,last_name,name,picture';
+
+//---------------------------------- DEFINE CONSTANT ------------------------------------
 
 // Définition de l'objet controllerUtilisateur
 function controllerUtilisateur(){
@@ -273,7 +279,7 @@ function controllerUtilisateur(){
     } 
 
     var buildRequestFacebook = function(id , accessToken){
-        return modele.urlFacebook + id +"?fields="+ modele.filedsFacebook +"&access_token="+ accessToken +"&height=500&width=500"; 
+        return URL_FACEBOOK + id +"?fields="+ FIELDS_FACEBOOK +"&access_token="+ accessToken +"&height=500&width=500"; 
     }
 }
 

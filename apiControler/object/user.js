@@ -1,4 +1,3 @@
-var modele  = require('../model/response.js');
 var utils = require('../utils/Utils.js');
 
 function UserDto()

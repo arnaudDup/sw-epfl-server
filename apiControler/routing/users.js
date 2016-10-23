@@ -1,7 +1,6 @@
 var express 		 = require('express');
 var router 		     = express.Router();
 var path             = require('path');
-var modele           = require('../model/response.js');
 var userControler    = require('../model/userModel.js');
 var error            = require('../../setting/error.js');
 var utils            = require('../utils/Utils.js');
