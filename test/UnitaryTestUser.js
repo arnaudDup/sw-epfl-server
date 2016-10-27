@@ -60,7 +60,7 @@ describe('Test User API', () => {
                     var objectResponse = userManipulation.transformResponseClient(objectTest)
                     console.log(objectResponse.location.lattitude)
                     chai.assert.equal(objectResponse.location.lattitude , LONGITUDE, 'lattitude should be equals');
-                    chai.assert.equal(objectResponse.location.longitude , LONGITUDEW, 'longitude should be equals');
+                    chai.assert.equal(objectResponse.location.longitude , LONGITUDE, 'longitude should be equals');
                     done();
               });
         });

@@ -3,12 +3,15 @@ var unirest = require('unirest');
 var util = require('util');
 var setting = require('../../setting/error.js');
 var databaseConfig = require('../../setting/database.js');
+var globalConfig = require('../../setting/global.js');
 var userManipulation = require ('../object/user.js')
 var utils = require('../utils/Utils.js');
+
 
 // database
 var databasePostgres = require('../database/postgres.js');
 var User = require('../database/SequelizeORM.js').User;
+var Music = require('../database/SequelizeORM.js').Music;
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
@@ -46,7 +49,7 @@ function controllerUtilisateur(){
                         utils.logInfo("createUser(), the request succeed");
                         // remove the id in oder to keep only adiApi facebook
                         delete createUser.dataValues['id']
-                        var response = userManipulation.transformResponseClient(createUser);
+                        var response = userManipulation.transformResponseClient(createUser.dataValues);
                         callback(response,setting.htmlCode.succes_request);
 
                 // return a 500 code if the request is null.

@@ -92,8 +92,7 @@ router.route("/getUsersAround")
         else {
            res.status(error.bad_request).json(null);
         }
-    })
-
+    });
 
 
 module.exports = router;

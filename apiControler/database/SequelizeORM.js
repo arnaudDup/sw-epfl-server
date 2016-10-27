@@ -30,7 +30,7 @@ function BaseDeDonnee()
           age                 : Sequelize.INTEGER,
           backgroundPicture   : Sequelize.STRING,
           profilePicture      : Sequelize.STRING,
-          description          : Sequelize.STRING,
+          description         : Sequelize.STRING,
           lastname            : Sequelize.STRING,
           lattitude           : Sequelize.REAL,
           longitude           : Sequelize.REAL,
@@ -39,10 +39,26 @@ function BaseDeDonnee()
           timestamps: false
     })
 
-    // there the next schema...
- 
+    
+    // create the schema of the user.
+    this.Music = this.sequelize.define('Music', {
+          artist        : Sequelize.STRING,
+          name          : Sequelize.STRING,
+          url           : Sequelize.STRING,
+          tag           : Sequelize.STRING,
+
+      },{
+          timestamps: true
+    })
+
+    this.makeLinkBetweenTable = function(){
+      this.User.hasMany(this.Music)
+      this.User.belongsTo(this.Music, { as: 'CurrentMusic', constraints: false })
+    }
 }
 
 var BaseDeDonnee = new BaseDeDonnee();
+BaseDeDonnee.makeLinkBetweenTable();
+
 // export object
 module.exports = BaseDeDonnee;

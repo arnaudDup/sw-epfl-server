@@ -34,9 +34,11 @@ databasePostgres.ConnexionPostgres();
 // routing
 var routes               = require('./routes/index');
 var RouteUtilisateur     = require('./apiControler/routing/users.js');
+var RouteMusic           = require('./apiControler/routing/music.js');
 
 app.use('/', routes);
 app.use('/api/Users',RouteUtilisateur);
+app.use('/api/Musics',RouteMusic);
 
 //----------------------------------------------------------------------------------
 utils.logInfo("app , SERVEUR OK : Ecoute sur le port 3000");
