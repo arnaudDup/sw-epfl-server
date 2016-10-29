@@ -8,9 +8,9 @@ This is the server used for the course software engineering given at epfl
 # TODO 
 
 - [x] Sequelize (use the ORM)
-- [ ] Finish user Api.
-- [ ] Music Api. 
+- [x] Finish user Api.
+- [x] Music Api. 
 - [ ] Search people around.
 - [ ] Message
 - [x] Test User Api
-- [ ] Test Music Api
+- [x] Test Music Api
