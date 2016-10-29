@@ -38,14 +38,19 @@ var  MusicTest ={
 // ----------------------------------------------   TEST  -----------------------------------------
 
 //Our parent block
-describe('Test Music API', () => {
-
+describe('Test music uniatry method', () => {
 
   // ----------------------------------------------   COMPUTE Object  -----------------------------------------
     describe('Compute new Music object', () => {
         it('should compute the client response', (done) => {
                     var result = musicManipulation.transformResponseClient(MusicTest)
-                    chai.assert.equal(result,MusicTestUpdate,'objects are not be equals');
+                    chai.assert.equal(result.id,MusicTestUpdate.id,'ids are not be equals');
+                    chai.assert.equal(result.artist,MusicTestUpdate.artist,'ids are not be equals');
+                    chai.assert.equal(result.name,MusicTestUpdate.name,'ids are not be equals');
+                    chai.assert.equal(result.url,MusicTestUpdate.url,'ids are not be equals');
+                    chai.assert.equal(result.updatedAt,undefined,'remove updatedAt');
+                    chai.assert.equal(result.createdAt,undefined,'remove updatedAt');
+                    chai.assert.equal(result.UserId,undefined,'remove updatedAt');
                     done();
 
               });

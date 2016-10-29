@@ -6,18 +6,24 @@ var Sequelize = require('sequelize');
 function BaseDeDonnee()
 {
           // first we select on wich database we are going to work.
-      var urlDatabase = null
+      var urlDatabase = null;
+      var logging_output = null;
+
       if(process.env.NODE_ENV !== 'test') {
           utils.logInfo("Postgres.Database(), run in normal configuration");
           urlDatabase = databaseConfig.PostGre.url
+          this.sequelize = new Sequelize(urlDatabase,{});
+          
       }
       else {
           utils.logInfo("Postgres.Database(), run for test configuration");
           urlDatabase = databaseConfig.PostGreTest.url
+          this.sequelize = new Sequelize(urlDatabase,{
+            logging : false
+          });
       }
 
       utils.logInfo("Sequelize database connected to: "+urlDatabase);
-      this.sequelize = new Sequelize(urlDatabase);
 
     // create the schema of the user.
     this.User = this.sequelize.define('Users', {

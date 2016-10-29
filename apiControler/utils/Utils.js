@@ -1,10 +1,25 @@
-var logger = require('winston'); 
+var winston = require('winston'); 
 
-// add timestamp
-logger.remove(logger.transports.Console);
-logger.add(logger.transports.Console, {'timestamp':true});
-// display debug logger.
-logger.level = 'debug';
+
+
+// if We test we desactivate the output in the console.
+// in order to see only the response.
+if (process.env.NODE_ENV !== 'test') {
+    // log for developpement.
+    logger = new (winston.Logger)({
+        transports: [
+            new (winston.transports.Console)({'timestamp':true}), 
+            new (winston.transports.File)({ filename: 'foo.log' })
+        ]
+    });
+} else {
+    // log for testing.
+    logger = new (winston.Logger)({
+        transports: [
+            new (winston.transports.File)({ filename: 'foo.log','timestamp':true }),
+        ]
+    });
+}
 
 
 function Utils()

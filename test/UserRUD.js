@@ -7,7 +7,10 @@ var chaiHttp = require('chai-http');
 var server = require('../app');
 var utils = require('../apiControler/utils/Utils.js');
 var should = chai.should();
+var chaiAsPromised = require ("chai-as-promised")
+chai.use(chaiAsPromised);
 var setting = require('../setting/error.js');
+var expect = chai.expect;
 
 chai.use(chaiHttp);
 var User = require('../apiControler/database/SequelizeORM.js').User;
@@ -41,42 +44,52 @@ var FAKE_ID = 1
  // ----------------------------------------------   TEST  -----------------------------------------
 
 //Our parent block
-describe('Test User API', () => {
+describe('Test User API update/delete/get.', () => {
 
     // Before each test we insert a user. 
     beforeEach((done) => { 
-          // Insert the new user in the database 
-          // We force the recreation of the User table each time in order to be updated
-          // each time a new request arrive.
-          User.sync({force: true}).then(function () {
 
-                var createUser =  User.create({
-                        idApiConnection :userTest.id, 
-                        lastname : userTest.lastname,
-                        firstname: userTest.firstname,
-                        email : userTest.email,
-                        age : userTest.age,
-                        profilePicture : userTest.profilePicture,
-                        backgroundPicture : userTest.backgroundPicture
+        // the promise allow to test some asynchronous method.
+        var testPromise = new Promise(function(resolve, reject) {
+          setTimeout(function() {
+                  User.sync({force: true}).then(function () {
 
-                // callback if the user srequest succeed.
-                }).then(function(createUser) {
-                        utils.logInfo("createUser(), the request succeed");
-                        done();
-                // return a 500 code if the request is null.
-                }).catch(function(error) {
-                     utils.logInfo("createUser(), the request fail" +error);
-                     chai.assert.isOk(false, 'impossible to add user');
-                     done();
-                      
+                      var createUser =  User.create({
+                              idApiConnection :userTest.id, 
+                              lastname : userTest.lastname,
+                              firstname: userTest.firstname,
+                              email : userTest.email,
+                              age : userTest.age,
+                              profilePicture : userTest.profilePicture,
+                              backgroundPicture : userTest.backgroundPicture
+
+                      // callback if the user srequest succeed.
+                      }).then(function(createUser) {
+                              resolve(true);
+
+                      // return a 500 code if the request is null.
+                      }).catch(function(error) {
+                           resolve(false);
+                            
+                      })
                 })
+              }, 200);
+        });
 
-           });
+          testPromise.then(function(result){
+              try {
+                    console.log ("Before :" +result);
+                    expect(result).to.equal(true);
+                    done();
+              } catch(err) {
+                  done(err);
+              }
+          }, done); 
     });
 
     // ----------------------------------------------   TEST GET USER -----------------------------------------
     /*
-    * We try to get the User, t
+    * We try to get the User 
     */
     describe('get user', () => {
         it('should get a user', (done) => {
@@ -127,26 +140,32 @@ describe('Test User API', () => {
 
                   // Check the User 
                   res.should.have.status(setting.htmlCode.succes_request);
+                   // the promise allow to test some asynchronous method.
+                      var testPromise = new Promise(function(resolve, reject) {
+                      setTimeout(function() {
 
-                  // We check if the user is actually remove.
-                   User.sync().then(function () {
-                      // select query.
-                       var getUser =  User.findOne({
-                            where: {
-                              idApiConnection: userTest.id
-                            }
-                          }).then(function(getUser) {
-                              // check if the user is null.
-                              chai.assert.isNull(getUser, 'The user is deleted from the database');
-                              done();
+                          res.should.have.status(setting.htmlCode.succes_request);
+                            User.sync().then(function () {
+                              // select query.
+                               var getUser =  User.findOne({
+                                    where: {
+                                      idApiConnection: userTest.id
+                                    }
+                                  }).then(function(getUser) {
+                                      resolve(getUser);
+                                  })
+                              });
+                    }, 200);
+                });
 
-                          }).catch(function(error) {
-                             utils.logInfo("deleteUser(), the request fail" +error);
-                             chai.assert.isOk(false, 'impossible to add user');
-                             done();
-                          });
-
-                  });
+                testPromise.then(function(result){
+                    try {
+                          expect(result).to.equal(null);
+                          done();
+                    } catch(err) {
+                        done(err);
+                    }
+                  }, done);
             });
         });
     });
@@ -174,7 +193,7 @@ describe('Test User API', () => {
                           }).catch(function(error) {
                              utils.logInfo("deleteUser(), the request fail" +error);
                              chai.assert.isOk(false, 'impossible to add user');
-                             done();
+                             done(error);
                           });
 
                   });
@@ -196,30 +215,39 @@ describe('Test User API', () => {
                     "lastname":userUpdated.lastname
                   })
               .end((err, res) => {
-
+                // Check the User 
                   res.should.have.status(setting.htmlCode.succes_request);
-                      // select query.
-                       var getUser =  User.findOne({
-                            where: {
-                              idApiConnection: userUpdated.id
-                            }
-                          }).then(function(getUser) {
-                            
-                              // test the new value of the User.
-                              chai.assert.equal(getUser.idApiConnection, userUpdated.id, 'id should be equals');
-                              chai.assert.equal(getUser.firstname, userUpdated.firstname, 'firstName should be equals');
-                              chai.assert.equal(getUser.description, userUpdated.description, 'description should be equals');
-                              chai.assert.equal(getUser.lastname, userUpdated.lastname, 'lastname should be equals');
-                              done();
+                   // the promise allow to test some asynchronous method.
+                      var testPromise = new Promise(function(resolve, reject) {
+                      setTimeout(function() {
 
-                          }).catch(function(error) {
-                             utils.logInfo("Updateuser(), the request fail" +error);
-                             chai.assert.isOk(false, 'impossible to add user');
-                             done();
-                          });
+                          res.should.have.status(setting.htmlCode.succes_request);
+                            User.sync().then(function () {
+                              // select query.
+                               var getUser =  User.findOne({
+                                    where: {
+                                      idApiConnection: userTest.id
+                                    }
+                                  }).then(function(getUser) {
+                                      resolve(getUser.dataValues);
+                                  })
+                              });
+                    }, 200);
+                });
+
+                testPromise.then(function(result){
+                    try {
+                            expect(result.idApiConnection).to.equal(userUpdated.id);
+                            expect(result.firstname).to.equal(userUpdated.firstname);
+                            expect(result.description).to.equal(userUpdated.description);
+                            expect(result.lastname).to.equal(userUpdated.lastname);
+                            done();
+                    } catch(err) {
+                        done(err);
+                    }
+                  }, done);
               });
         });
     });
-
 
 });

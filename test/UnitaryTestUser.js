@@ -31,10 +31,9 @@ var objectTest  = {
 // ----------------------------------------------   TEST  -----------------------------------------
 
 //Our parent block
-describe('Test User API', () => {
+describe('Test user unitary method', () => {
 
-
-// ----------------------------------------------   USER -----------------------------------------
+  // ----------------------------------------------   USER -----------------------------------------
 
   // ----------------------------------------------   COMPUTE AGE  -----------------------------------------
     describe('compute age', () => {
@@ -58,7 +57,6 @@ describe('Test User API', () => {
       describe('change object return ', () => {
         it('modify the object return', (done) => {
                     var objectResponse = userManipulation.transformResponseClient(objectTest)
-                    console.log(objectResponse.location.lattitude)
                     chai.assert.equal(objectResponse.location.lattitude , LONGITUDE, 'lattitude should be equals');
                     chai.assert.equal(objectResponse.location.longitude , LONGITUDE, 'longitude should be equals');
                     done();

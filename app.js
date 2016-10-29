@@ -16,11 +16,16 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// if we are in test, we display any log.
+if(process.env.NODE_ENV !== 'test') {
+  app.use(logger('dev'));    
+}
+
 
 //----------------------------------------------------------------------------------
 

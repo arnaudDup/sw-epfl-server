@@ -52,7 +52,7 @@ function controlerMusic(){
     this.updateMusic = function(idApi,MusicObject,callback)    {     
 
         // GET the user description by doing a post on facebook API.
-        unirest.get(buildRequestLastFm(MusicObject.artisteName,MusicObject.musicName)).end(function(res){
+        unirest.get(buildRequestLastFm(MusicObject.artistName,MusicObject.musicName)).end(function(res){
 
           // We can't reach the facebook graph.
           if (res.error) {
@@ -60,15 +60,14 @@ function controlerMusic(){
           }
           else {
                 var body = {'artist':null,'track':null}
-                console.log(res.raw_body);
 
                 // get the value from the response.
                 res.raw_body  = JSON.parse(res.raw_body, (key, value) => {
                   // the case where we can't find any informations about the music.
                   if(key == 'error'){
                     body = {
-                              'artist': MusicObject.artisteName ,
-                              'track':{'url': '', 'name':MusicObject.musicName}
+                              'artist': MusicObject.artistName ,
+                              'track':{'url': null , 'name':MusicObject.musicName}
                             }
                   }
 
@@ -110,8 +109,8 @@ function controlerMusic(){
                               // We force the link.
                               getUser.setCurrentMusic(CreateMusic.id);
                               getUser.addMusic(CreateMusic.id);
-                              //var response = musicManipulation.transformResponseClient(CreateMusic.dataValues); 
-                              callback(CreateMusic,setting.htmlCode.succes_request);
+                              var response = musicManipulation.transformResponseClient(CreateMusic.dataValues); 
+                              callback(response,setting.htmlCode.succes_request);
 
                           }).catch(function(error) {
                               utils.logError("error getting user : "+error)
