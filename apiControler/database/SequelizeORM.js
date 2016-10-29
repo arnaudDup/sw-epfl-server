@@ -12,17 +12,25 @@ function BaseDeDonnee()
       if(process.env.NODE_ENV !== 'test') {
           utils.logInfo("Postgres.Database(), run in normal configuration");
           urlDatabase = databaseConfig.PostGre.url
-          this.sequelize = new Sequelize(urlDatabase,{});
+          this.sequelize = new Sequelize(urlDatabase,{
+            dialect: 'postgres', 
+             dialectOptions: {
+                ssl: true
+              }
+          });
           
       }
       else {
           utils.logInfo("Postgres.Database(), run for test configuration");
           urlDatabase = databaseConfig.PostGreTest.url
           this.sequelize = new Sequelize(urlDatabase,{
-            logging : false
+            logging : false,
+            dialect: 'postgres', 
+              dialectOptions: {
+                ssl: true
+              }
           });
       }
-
       utils.logInfo("Sequelize database connected to: "+urlDatabase);
 
     // create the schema of the user.
