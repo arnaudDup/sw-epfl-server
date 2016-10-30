@@ -8,6 +8,20 @@ var utils            = require('../utils/Utils.js');
 // Mach on the route
 router.route("/:id")
 
+    // Get the user.
+    .get(function(req,res)
+    {
+        utils.logInfo("routing.user(), get user");
+        if(typeof(req.params.id) != 'undefined'){
+            musicControler.getMusic(req.params.id,function(reponse, htmlCode){
+                res.status(htmlCode).json(reponse);
+            });
+        }
+        else{
+           res.status(error.bad_request).json(null);
+        }
+    })
+
     .post(function(req,res)
     {
         utils.logInfo(" routing.user(), create a user ");

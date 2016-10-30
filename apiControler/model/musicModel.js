@@ -21,31 +21,30 @@ var URL_LASTFM = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo"
 // Définition de l'objet controllerUtilisateur
 function controlerMusic(){
 
-  // private method, allow to get a specific user designed by api connection.
-  var getUserByIdConnection = function(idMusic,callback){
+  // Implementation of the REST GET service.
+  this.getMusic = function(idMusic,callback){
 
-      var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
+      utils.logInfo("getUserByIdConnection(), get the user"+ idMusic);
 
-      utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
-      Music.sync().then(function () {
         // select query.
-         var getMusic =  Music.findOne({
-              where: {
-                id: idMusic
-              }
+         Music.sync().then(function () {
 
-            }).then(function(getUser) {
+             // select query.
+             var getMusic =  Music.findOne({
+                  where: {
+                    id : idMusic
+                  }
 
-                utils.logInfo("request succeed"+idApi)
-                delete getUser.dataValues['id']
-                var response = musicManipulation.transformResponseClient(getUser.dataValues);
-                callback(response,setting.htmlCode.succes_request);
+                }).then(function(getMusic) {
 
-            }).catch(function(error) {
-                utils.logError("error getting user : "+error)
-                callback(null,setting.htmlCode.unavailable_ressources);
-            });
-        });
+                    var response = musicManipulation.transformResponseClient(getMusic.dataValues); 
+                    callback(response,setting.htmlCode.succes_request);
+
+                }).catch(function(error) {
+                    utils.logError("error getting user : "+error)
+                    callback(null,setting.htmlCode.unavailable_ressources);
+              });
+          });
     }
 
 

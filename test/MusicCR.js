@@ -141,6 +141,55 @@ describe('Test Music API', () => {
           });
     });
 
+       describe('test the get Music', () => {
+              it('should the get a music by his id', (done) => {
+
+                url = '/api/Musics/'+ userTest.id;
+                chai.request(server)
+                    .post(url)
+                    .send(GoodMusicName)
+                      .end((err, res) => {
+
+                        // the promise allow to test some asynchronous method.
+                        var testPromise = new Promise(function(resolve, reject) {
+                        setTimeout(function() {
+
+                            res.should.have.status(setting.htmlCode.succes_request);
+                               // select query.
+                               var getMusic =  Music.findOne({
+                                    where: {
+
+                                    }
+                                  }).then(function(getMusic) {
+                                        resolve(getMusic.dataValues);
+                                  });
+                          
+                      }, 200);
+                  });
+
+                  testPromise.then(function(result){
+                      try {
+
+                         // Test the get Method.
+                         chai.request(server)
+                          .get('/api/Musics/'+ result.id)
+                          .end((err, res) => {
+                              expect(result.artist).to.equal(responseGood.artist);
+                              expect(result.name).to.equal(responseGood.name);
+                              expect(result.url).to.equal(responseGood.url);
+                              expect(result.UserId).to.equal(ID_USER);
+                              expect(result.id).to.equal(MUSIC_ID);
+                              done();
+
+                        });
+                      } catch(err) {
+                          done(err);
+                      }
+                    }, done);
+            });
+        });
+    });
+
 
      describe('create Music 2', () => {
             it('should create music bad parameters --> LastFM connection', (done) => {
