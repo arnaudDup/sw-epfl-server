@@ -34,6 +34,7 @@ var  MusicTest ={
     "url": "",
     "tag": "pop",
   }
+  var FAKE_MUSIC_ID = 100;
 
 // ----------------------------------------------   TEST  -----------------------------------------
 
@@ -55,5 +56,20 @@ describe('Test music uniatry method', () => {
 
               });
         });
+
+
+       describe('test fail get Music', () => {
+              it('should not get a music by his id', (done) => {
+
+                url = '/api/Musics/'+ FAKE_MUSIC_ID;
+                chai.request(server)
+                    .get(url)
+                      .end((err, res) => {
+                            res.should.have.status(setting.htmlCode.unavailable_ressources);
+                            done();
+                  });
+
+        });
+    });
 
 });
