@@ -12,7 +12,10 @@ function UserDto()
                    }
 
 
+        UserObject.currentMusicId = UserObject.CurrentMusicId
+
         delete UserObject['lattitude']
+        delete UserObject['CurrentMusicId']
         delete UserObject['longitude']
 
         UserObject.location = locationUser;
