@@ -6,6 +6,7 @@
   "scripts": {
     "start": "set NODE_ENV=dev && node ./bin/www",
     "test": "jenkins-mocha test/*"
+    
   },
   "dependencies": {
     "babel": "^6.5.2",
@@ -26,6 +27,7 @@
     "unirest": "^0.5.1",
     "winston": "^2.2.0"
   },
+
   "devDependencies": {
     "babel": "^6.5.2",
     "chai": "^3.5.0",
