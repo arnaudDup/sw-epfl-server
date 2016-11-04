@@ -54,12 +54,12 @@ function controllerUtilisateur(){
                   createUser.setSetting(Constant.GeneralModel.idDefaultSetting);
 
    
-                  getUser.getSetting().then(function(associatedTasks) {
-                      userManipulation.changeSetting(getUser.dataValues,associatedTasks.dataValues)
+                  createUser.getSetting().then(function(associatedTasks) {
+                      userManipulation.changeSetting(createUser.dataValues,associatedTasks.dataValues)
                       
                       // We kepp only the id of facebook.
-                      delete getUser.dataValues['id']
-                      var response = userManipulation.transformResponseClient(getUser.dataValues);
+                      delete createUser.dataValues['id']
+                      var response = userManipulation.transformResponseClient(createUser.dataValues);
                       callback(response,setting.htmlCode.succes_request);
                   }).catch(function(error) {
                       utils.logError("This User does not have any SettingValue"+error)

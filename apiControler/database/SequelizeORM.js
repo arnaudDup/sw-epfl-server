@@ -81,7 +81,7 @@ function BaseDeDonnee()
     this.makeLinkBetweenTable = function(){
       this.User.hasMany(this.Music)
       this.User.belongsTo(this.Music, {as: 'CurrentMusic', constraints: false})
-      this.User.belongsTo(this.Setting, {as: 'Setting',constraints: false})
+      this.User.belongsTo(this.Setting, {constraints: false})
     }
 
     this.initiateValue = function(){

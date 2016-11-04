@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">65.49% </span>
+        <span class="strong">67.26% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>74/113</span>
+        <span class='fraction'>76/113</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>22/36</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">65.49% </span>
+        <span class="strong">67.26% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>74/113</span>
+        <span class='fraction'>76/113</span>
       </div>
     </div>
   </div>
@@ -407,22 +407,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -713,13 +713,13 @@ function controllerUtilisateur(){
                   createUser.setSetting(Constant.GeneralModel.idDefaultSetting);
 &nbsp;
    
-                  getUser.getSetting().then(<span class="fstat-no" title="function not covered" >function(associatedTasks) {</span>
-<span class="cstat-no" title="statement not covered" >                      userManipulation.changeSetting(getUser.dataValues,associatedTasks.dataValues)</span>
+                  createUser.getSetting().then(function(associatedTasks) {
+                      userManipulation.changeSetting(createUser.dataValues,associatedTasks.dataValues)
                       
                       // We kepp only the id of facebook.
-<span class="cstat-no" title="statement not covered" >                      delete getUser.dataValues['id']</span>
-<span class="cstat-no" title="statement not covered" >                      var response = userManipulation.transformResponseClient(getUser.dataValues);</span>
-<span class="cstat-no" title="statement not covered" >                      callback(response,setting.htmlCode.succes_request);</span>
+                      delete createUser.dataValues['id']
+                      var response = userManipulation.transformResponseClient(createUser.dataValues);
+                      callback(response,setting.htmlCode.succes_request);
                   }).catch(<span class="fstat-no" title="function not covered" >function(error) {</span>
 <span class="cstat-no" title="statement not covered" >                      utils.logError("This User does not have any SettingValue"+error)</span>
 <span class="cstat-no" title="statement not covered" >                      callback(null,setting.htmlCode.unavailable_ressources);</span>
@@ -727,9 +727,9 @@ function controllerUtilisateur(){
 &nbsp;
 &nbsp;
                 // return a 500 code if the request is null.
-                }).catch(function(error) {
-                     utils.logInfo("createUser(), the request fail" +error);
-                    callback(null,setting.htmlCode.unavailable_ressources);
+                }).catch(<span class="fstat-no" title="function not covered" >function(error) {</span>
+<span class="cstat-no" title="statement not covered" >                     utils.logInfo("createUser(), the request fail" +error);</span>
+<span class="cstat-no" title="statement not covered" >                    callback(null,setting.htmlCode.unavailable_ressources);</span>
                 })
 &nbsp;
            });
@@ -970,7 +970,7 @@ module.exports = new controllerUtilisateur();</pre></td></tr>
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 04 2016 23:05:00 GMT+0100 (CET)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 04 2016 23:21:31 GMT+0100 (CET)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

@@ -1,23 +1,17 @@
-<testsuite name="Mocha Tests" tests="15" failures="1" errors="1" skipped="0" timestamp="Fri, 04 Nov 2016 22:05:10 GMT" time="9.898">
-<testcase classname="Test Music API create Music 1" name="should create music good parameters --&gt; LastFM connection" time="0.921"/>
-<testcase classname="Test Music API test the get Music" name="should the get a music by his id" time="1.007"/>
-<testcase classname="Test Music API create Music 2" name="should create music bad parameters --&gt; LastFM connection" time="0.876"/>
+<testsuite name="Mocha Tests" tests="15" failures="0" errors="0" skipped="0" timestamp="Fri, 04 Nov 2016 22:21:42 GMT" time="10.084">
+<testcase classname="Test Music API create Music 1" name="should create music good parameters --&gt; LastFM connection" time="0.949"/>
+<testcase classname="Test Music API test the get Music" name="should the get a music by his id" time="1"/>
+<testcase classname="Test Music API create Music 2" name="should create music bad parameters --&gt; LastFM connection" time="0.88"/>
 <testcase classname="Test music uniatry method Compute new Music object" name="should compute the client response" time="0"/>
-<testcase classname="Test music uniatry method test fail get Music" name="should not get a music by his id" time="0.133"/>
-<testcase classname="Test user unitary method compute age" name="should compute the age" time="0.001"/>
+<testcase classname="Test music uniatry method test fail get Music" name="should not get a music by his id" time="0.129"/>
+<testcase classname="Test user unitary method compute age" name="should compute the age" time="0"/>
 <testcase classname="Test user unitary method compute age" name="should return 0 because it is undefined " time="0"/>
-<testcase classname="Test user unitary method change object return " name="modify the object return" time="0.001"/>
-<testcase classname="Test User API create User create user" name="should create a user" time="0"><failure message="expected { Object (domain, _events, ...) } to have status code 200 but got 500"><![CDATA[AssertionError: expected { Object (domain, _events, ...) } to have status code 200 but got 500
-    at chai.request.post.send.end (test/UserC.js:58:49)
-    at Test.Request.callback (node_modules/superagent/lib/node/index.js:797:3)
-    at IncomingMessage.&lt;anonymous&gt; (node_modules/superagent/lib/node/index.js:990:12)
-    at endReadableNT (_stream_readable.js:926:12)
-    at _combinedTickCallback (internal/process/next_tick.js:74:11)
-    at process._tickCallback (internal/process/next_tick.js:98:9)]]></failure></testcase>
-<testcase classname="Test User API create User create user" name="should not create a user because bad information" time="0.105"/>
-<testcase classname="Test User API update/delete/get. get user" name="should get a user" time="0.171"/>
-<testcase classname="Test User API update/delete/get. get user" name="should fail to get a uer" time="0.127"/>
-<testcase classname="Test User API update/delete/get. delete user" name="should delete a user" time="0.466"/>
-<testcase classname="Test User API update/delete/get. delete user" name="should not a user" time="0.25"/>
-<testcase classname="Test User API update/delete/get. update user" name="should update a user" time="0.458"/>
+<testcase classname="Test user unitary method change object return " name="modify the object return" time="0"/>
+<testcase classname="Test User API create User create user" name="should create a user" time="0.694"/>
+<testcase classname="Test User API create User create user" name="should not create a user because bad information" time="0.107"/>
+<testcase classname="Test User API update/delete/get. get user" name="should get a user" time="0.177"/>
+<testcase classname="Test User API update/delete/get. get user" name="should fail to get a uer" time="0.134"/>
+<testcase classname="Test User API update/delete/get. delete user" name="should delete a user" time="0.467"/>
+<testcase classname="Test User API update/delete/get. delete user" name="should not a user" time="0.256"/>
+<testcase classname="Test User API update/delete/get. update user" name="should update a user" time="0.463"/>
 </testsuite>
