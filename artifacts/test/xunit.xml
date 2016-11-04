@@ -1,17 +1,18 @@
-<testsuite name="Mocha Tests" tests="15" failures="0" errors="0" skipped="0" timestamp="Fri, 04 Nov 2016 22:21:42 GMT" time="10.084">
-<testcase classname="Test Music API create Music 1" name="should create music good parameters --&gt; LastFM connection" time="0.949"/>
-<testcase classname="Test Music API test the get Music" name="should the get a music by his id" time="1"/>
-<testcase classname="Test Music API create Music 2" name="should create music bad parameters --&gt; LastFM connection" time="0.88"/>
+<testsuite name="Mocha Tests" tests="16" failures="0" errors="0" skipped="0" timestamp="Fri, 04 Nov 2016 22:46:53 GMT" time="10.014">
+<testcase classname="Test Music API create Music 1" name="should create music good parameters --&gt; LastFM connection" time="1.02"/>
+<testcase classname="Test Music API test the get Music" name="should the get a music by his id" time="1.005"/>
+<testcase classname="Test Music API create Music 2" name="should create music bad parameters --&gt; LastFM connection" time="0.856"/>
+<testcase classname="Test setting unitary method change object return " name="modify the object return" time="0"/>
 <testcase classname="Test music uniatry method Compute new Music object" name="should compute the client response" time="0"/>
-<testcase classname="Test music uniatry method test fail get Music" name="should not get a music by his id" time="0.129"/>
+<testcase classname="Test music uniatry method test fail get Music" name="should not get a music by his id" time="0.127"/>
 <testcase classname="Test user unitary method compute age" name="should compute the age" time="0"/>
-<testcase classname="Test user unitary method compute age" name="should return 0 because it is undefined " time="0"/>
+<testcase classname="Test user unitary method compute age" name="should return 0 because it is undefined " time="0.001"/>
 <testcase classname="Test user unitary method change object return " name="modify the object return" time="0"/>
-<testcase classname="Test User API create User create user" name="should create a user" time="0.694"/>
-<testcase classname="Test User API create User create user" name="should not create a user because bad information" time="0.107"/>
-<testcase classname="Test User API update/delete/get. get user" name="should get a user" time="0.177"/>
-<testcase classname="Test User API update/delete/get. get user" name="should fail to get a uer" time="0.134"/>
-<testcase classname="Test User API update/delete/get. delete user" name="should delete a user" time="0.467"/>
-<testcase classname="Test User API update/delete/get. delete user" name="should not a user" time="0.256"/>
-<testcase classname="Test User API update/delete/get. update user" name="should update a user" time="0.463"/>
+<testcase classname="Test User API create User create user" name="should create a user" time="0.695"/>
+<testcase classname="Test User API create User create user" name="should not create a user because bad information" time="0.106"/>
+<testcase classname="Test User API update/delete/get. get user" name="should get a user" time="0.173"/>
+<testcase classname="Test User API update/delete/get. get user" name="should fail to get a uer" time="0.129"/>
+<testcase classname="Test User API update/delete/get. delete user" name="should delete a user" time="0.453"/>
+<testcase classname="Test User API update/delete/get. delete user" name="should not a user" time="0.251"/>
+<testcase classname="Test User API update/delete/get. update user" name="should update a user" time="0.458"/>
 </testsuite>
