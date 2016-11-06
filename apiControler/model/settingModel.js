@@ -6,13 +6,12 @@ var databaseConfig = require('../../setting/database.js');
 var globalConfig = require('../../setting/global.js');
 var userManipulation = require ('../object/user.js')
 var utils = require('../utils/Utils.js');
-var Constant = require ('../utils/Constant.js')
+
 
 // database
 var databasePostgres = require('../database/postgres.js');
 var User = require('../database/SequelizeORM.js').User;
 var Music = require('../database/SequelizeORM.js').Music;
-var Setting = require('../database/SequelizeORM.js').Setting;
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
@@ -47,25 +46,11 @@ function controllerUtilisateur(){
 
                 // callback if the user srequest succeed.
                 }).then(function(createUser) {
-
-                  utils.logInfo("createUser(), the request succeed");
-
-                  // We associate with the default value.
-                  createUser.setSetting(Constant.GeneralModel.idDefaultSetting);
-
-   
-                  createUser.getSetting().then(function(associatedTasks) {
-                      userManipulation.changeSetting(createUser.dataValues,associatedTasks.dataValues)
-                      
-                      // We kepp only the id of facebook.
-                      delete createUser.dataValues['id']
-                      var response = userManipulation.transformResponseClient(createUser.dataValues);
-                      callback(response,setting.htmlCode.succes_request);
-                  }).catch(function(error) {
-                      utils.logError("This User does not have any SettingValue"+error)
-                      callback(null,setting.htmlCode.unavailable_ressources);
-                  });
-
+                        utils.logInfo("createUser(), the request succeed");
+                        // remove the id in oder to keep only adiApi facebook
+                        delete createUser.dataValues['id']
+                        var response = userManipulation.transformResponseClient(createUser.dataValues);
+                        callback(response,setting.htmlCode.succes_request);
 
                 // return a 500 code if the request is null.
                 }).catch(function(error) {
@@ -81,6 +66,7 @@ function controllerUtilisateur(){
   var getUserByIdConnection = function(idApi,callback){
 
       var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
+
       utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
       User.sync().then(function () {
         // select query.
@@ -88,18 +74,13 @@ function controllerUtilisateur(){
               where: {
                 idApiConnection: idApi
               }
+
             }).then(function(getUser) {
 
                 utils.logInfo("request succeed"+idApi)
-                getUser.getSetting().then(function(associatedTasks) {
-                    userManipulation.changeSetting(getUser.dataValues,associatedTasks.dataValues)
-                    delete getUser.dataValues['id']
-                    var response = userManipulation.transformResponseClient(getUser.dataValues);
-                    callback(response,setting.htmlCode.succes_request);
-                }).catch(function(error) {
-                    utils.logError("This User does not have any SettingValue"+error)
-                    callback(null,setting.htmlCode.unavailable_ressources);
-                });
+                delete getUser.dataValues['id']
+                var response = userManipulation.transformResponseClient(getUser.dataValues);
+                callback(response,setting.htmlCode.succes_request);
 
             }).catch(function(error) {
                 utils.logError("error getting user : "+error)
@@ -107,17 +88,6 @@ function controllerUtilisateur(){
             });
         });
     }
-
-/*
-
-SELECT *, point(1.4, 1.5) <@> point(longitude, lattitude)::point AS user_distance
-From public."Users"
-WHERE (point(1.4, 1.5) <@> point(longitude, lattitude)) < 100
-AND age > 14
-AND age < 30
-ORDER by user_distance; 
-
-*/
 
   // private method, allow to get a specific user designed by api connection.
   var getUserAroundByRadius = function(idApi,callback){
@@ -137,15 +107,7 @@ ORDER by user_distance;
                 utils.logError("request succeed"+idApi)
                 delete getUser.dataValues['id']
                 var user1 = userManipulation.transformResponseClient(getUser.dataValues);
-
-                var testUser = null;
-                if (Math.random() > 0.5){
-                  testUser = [user1,user1]
-                }
-                else {
-                  testUser = [user1,user1,user1]
-                }
-
+                var testUser = [user1,user1]
                 callback(testUser,setting.htmlCode.succes_request);
 
             }).catch(function(error) {
@@ -291,15 +253,15 @@ ORDER by user_distance;
     }    
 
     
-    this.updateUser = function (idApi,UserObject,callback){
+    this.updateUser = function (idApi,UserDto,callback){
 
       // We synchronize with the databse in order to change the name and the 
        User.sync({force: false}).then(function () {
 
             var updateUser =  User.update({
-                lastname: UserObject.lastname,
-                firstname : UserObject.firstname,
-                description: UserObject.description,
+                lastname: UserDto.lastname,
+                firstname : UserDto.firstname,
+                description: UserDto.description,
               }, 
               {
               where: {
@@ -318,88 +280,6 @@ ORDER by user_distance;
 
       });
     } 
-
-
-    this.updateSetting = function (idApi,SettingObject,callback){
-
-      utils.logInfo("updateSetting()");
-         
-         User.sync().then(function () {
-           // select query.
-           var getUser =  User.findOne({
-                where: {
-                  idApiConnection: idApi
-                }
-            }).then(function(getUser) {
-                utils.logInfo("updateSetting(), update setting of:"+getUser.idApiConnection);
-                getUser.getSetting().then(function(associatedTasks) {
-
-                    utils.logInfo("updateSetting(), update setting of:"+getUser.idApiConnection);
-                    // the Setting of the user is the default one.
-                    if (associatedTasks.dataValues.id == 1){
-                          // Insert the default setting for everyone in the database.
-                          Setting.sync({force: false}).then(function () {
-
-                                // we create a new setting associated to the user.
-                                var createSetting =  Setting.create({
-                                        ageMin        : SettingObject.ageMin,
-                                        ageMax        : SettingObject.ageMax,
-                                        radius        : SettingObject.radius,
-                                }).then(function(createSetting) {
-                                        // create new settign
-                                        utils.logInfo("initiateValue(), Added Setting default");
-                                        // update the current value of the setting.
-                                        getUser.setSetting(createSetting.id);                        
-                                        callback(createSetting.id,setting.htmlCode.succes_request);
-
-                                }).catch(function(error) {
-                                     utils.logInfo("initiateValue(), We cannot add the new Setting" +error);
-                                     callback(null,setting.htmlCode.unavailable_ressources);
-                                })
-                          });
-                    }
-
-                    // We update the current Setting of the User, already differents 
-                    // from the default one.
-                    else {
-
-                          // Insert the default setting for everyone in the database.
-                         Setting.sync({force: false}).then(function () {
-
-                            // we create a new setting associated to the user.
-                            var createSetting =  Setting.update({
-                                    ageMin        : SettingObject.ageMin,
-                                    ageMax        : SettingObject.ageMax,
-                                    radius        : SettingObject.radius,
-                             },
-                             {
-                                where: {
-                                          id: associatedTasks.dataValues.id
-                                       }  
-                                }).then(function(createSetting) {
-
-                                        utils.logInfo("initiateValue(), Added Setting default");
-                                        callback(null,setting.htmlCode.succes_request);
-
-                                }).catch(function(error) {
-                                     utils.logInfo("initiateValue(), We cannot add the new Setting" +error);
-                                     callback(null,setting.htmlCode.unavailable_ressources);
-                                })
-                          });
-                    }
-                    
-                }).catch(function(error) {
-                    utils.logError("This User does not have any SettingValue"+error)
-                    callback(null,setting.htmlCode.unavailable_ressources);
-                });
-
-            }).catch(function(error) {
-                utils.logError("error getting user : "+error)
-                callback(null,setting.htmlCode.unavailable_ressources);
-            });
-        });
-    }
-
 
     var buildRequestFacebook = function(id , accessToken){
         return URL_FACEBOOK + id +"?fields="+ FIELDS_FACEBOOK +"&access_token="+ accessToken +"&height=500&width=500"; 
