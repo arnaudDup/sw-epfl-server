@@ -109,6 +109,9 @@ function controllerUtilisateur(){
     }
 
 /*
+// on the database.
+CREATE EXTENSION cube;
+CREATE EXTENSION earthdistance;
 
 SELECT *, point(1.4, 1.5) <@> point(longitude, lattitude)::point AS user_distance
 From public."Users"
@@ -116,7 +119,6 @@ WHERE (point(1.4, 1.5) <@> point(longitude, lattitude)) < 100
 AND age > 14
 AND age < 30
 ORDER by user_distance; 
-
 */
 
   // private method, allow to get a specific user designed by api connection.
