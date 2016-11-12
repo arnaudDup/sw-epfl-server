@@ -13,6 +13,7 @@ var databasePostgres = require('../database/postgres.js');
 var User = require('../database/SequelizeORM.js').User;
 var Music = require('../database/SequelizeORM.js').Music;
 var Setting = require('../database/SequelizeORM.js').Setting;
+var sequelize = require('../database/SequelizeORM.js').sequelize ;
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
@@ -78,7 +79,7 @@ function controllerUtilisateur(){
 
 
   // private method, allow to get a specific user designed by api connection.
-  var getUserByIdConnection = function(idApi,callback){
+  this.getUserByIdConnection = function(idApi,callback){
 
       var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
       utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
@@ -108,23 +109,64 @@ function controllerUtilisateur(){
         });
     }
 
-/*
-// on the database.
-CREATE EXTENSION cube;
-CREATE EXTENSION earthdistance;
 
-SELECT *, point(1.4, 1.5) <@> point(longitude, lattitude)::point AS user_distance
-From public."Users"
-WHERE (point(1.4, 1.5) <@> point(longitude, lattitude)) < 100
-AND age > 14
-AND age < 30
-ORDER by user_distance; 
-*/
+
+   var getUserAroundReal = function(idApi,callback){
+
+      utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
+
+      var queryRequest = 'SELECT *, point(:lattitude,:longitude) <@> point(longitude, lattitude)::point AS user_distance '+
+                  'FROM public."Users" '+
+                  'WHERE (point(:lattitude, :longitude) <@> point(longitude, lattitude)) < :radius '+
+                  'AND age >= :ageMin '+
+                  'AND age < :ageMax '+
+                  'ORDER by user_distance;'
+
+      User.sync().then(function () {
+        // select query.
+         var getUser =  User.findOne({
+              where: {
+                idApiConnection: idApi
+              }
+            }).then(function(getUser) {
+
+                utils.logInfo("request succeed"+idApi)
+                getUser.getSetting().then(function(settingUser) {
+
+                    sequelize.query(queryRequest,
+                      { replacements: 
+                                      { 
+                                        lattitude: getUser.lattitude, longitude: getUser.longitude,
+                                        radius: settingUser.radius, ageMin: settingUser.ageMin,
+                                        ageMax: settingUser.ageMax, idApiConnection: idApi}, type: sequelize.QueryTypes.SELECT 
+                                      }).then(function(usersAround) {
+                                            utils.logInfo(usersAround)
+                                            usersAround.forEach(function(value){
+                                              userManipulation.transformResponseClient(value);
+                                            });                                            
+                                            callback(usersAround,setting.htmlCode.succes_request);
+                                      }).catch(function(error) {
+                                            utils.logError(error)
+                                            callback(null,setting.htmlCode.unavailable_ressources);
+                                      });
+
+                }).catch(function(error) {
+                  utils.logError("This User does not have any SettingValue"+error)
+                  callback(null,setting.htmlCode.unavailable_ressources);
+                });
+
+            }).catch(function(error) {
+
+                utils.logError("error getting user : "+idApi)
+                callback(null,setting.htmlCode.unavailable_ressources);
+            });
+        });
+  }
+
 
   // private method, allow to get a specific user designed by api connection.
   var getUserAroundByRadius = function(idApi,callback){
 
-      var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
       User.sync().then(function () {
@@ -156,6 +198,7 @@ ORDER by user_distance;
                 callback(null,setting.htmlCode.unavailable_ressources);
             });
         });
+
     }
 
 
@@ -251,11 +294,11 @@ ORDER by user_distance;
               // We get the user in the database and send to the client. 
               else{
                   utils.logInfo("I'am update the user");
-                  getUserAroundByRadius(UserObject.idApiConnection,callback);
+                  getUserAroundReal(UserObject.idApiConnection,callback);
               }
           }).catch(function(error) {
-               utils.logInfo("controllerUtilisateur(), the request fail");
-                callback(null,setting.htmlCode.unavailable_ressources);
+               utils.logInfo("controllerUtilisateur(), the request fail"+error);
+               callback(null,setting.htmlCode.unavailable_ressources);
           })
 
       });
@@ -363,9 +406,8 @@ ORDER by user_distance;
 
                     // We update the current Setting of the User, already differents 
                     // from the default one.
-                    else {
-
-                          // Insert the default setting for everyone in the database.
+                    else { 
+                         // Insert the default setting for everyone in the database.
                          Setting.sync({force: false}).then(function () {
 
                             // we create a new setting associated to the user.
