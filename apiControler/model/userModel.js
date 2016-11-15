@@ -7,6 +7,7 @@ var globalConfig = require('../../setting/global.js');
 var userManipulation = require ('../object/user.js')
 var utils = require('../utils/Utils.js');
 var Constant = require ('../utils/Constant.js')
+var utilTest = require ('util') 
 
 // database
 var databasePostgres = require('../database/postgres.js');
@@ -71,15 +72,15 @@ function controllerUtilisateur(){
                 // return a 500 code if the request is null.
                 }).catch(function(error) {
                      utils.logInfo("createUser(), the request fail" +error);
-                    callback(null,setting.htmlCode.unavailable_ressources);
+                     callback(null,setting.htmlCode.unavailable_ressources);
                 })
 
            });
     }
 
-
+ 
   // private method, allow to get a specific user designed by api connection.
-  this.getUserByIdConnection = function(idApi,callback){
+  var getUserByIdConnection = function(idApi,callback){
 
       var urlPictureFacebook = "https://graph.facebook.com/"+idApi+"/picture?height=500&width=500"; 
       utils.logInfo("getUserByIdConnection(), get the user"+ idApi);
@@ -109,12 +110,87 @@ function controllerUtilisateur(){
         });
     }
 
+/*
+   var getUserAroundBySettingSequalize = function(idApi,callback){
 
+      utils.logInfo("request succeed"+idApi)
+      User.sync().then(function () {
+        // select query.
+         var GETTINGUser =  User.findOne({
+              where: {
+                idApiConnection: idApi
+              }
+            }).then(function(GETTINGUser) {
+
+                utils.logInfo("request succeed"+idApi)
+                GETTINGUser.getSetting().then(function(settingUser) {
+
+                  utils.logInfo("request succeed "+ settingUser)
+                  var lat       = GETTINGUser.location.coordinates[0]
+                  var lng       = GETTINGUser.location.coordinates[1];
+
+                  var point = sequelize.fn('ST_MakePoint', lat, lng);
+
+                  var UsersGet =  User.findAll({
+
+                      where:  sequelize.where(
+                                  sequelize.fn('ST_Distance_Sphere',
+                                  point,
+                                  sequelize.col('location')),
+                                  {
+                                      $lte: settingUser.radius * 1000,
+                                  },
+                                  and,
+                                  sequelize.col('age')),
+                                  {
+                                      $and{
+                                        $lte: settingUser.radius * 1000,
+                                        $lte: settingUser.radius * 1000,
+                                      }
+                                  }
+                               )
+
+                          }).then(function(UsersGet) { 
+                        
+                            utils.logInfo(UsersGet.dataValues) 
+                            callback(UsersGet.dataValues,setting.htmlCode.succes_request);
+                            utils.logInfo("yolo")
+
+                    }).catch(function(error) {
+                        utils.logError("This User does not have any SettingValue" + error)
+                        callback(null,setting.htmlCode.unavailable_ressources);
+                    });
+
+
+                }).catch(function(error) {
+                  utils.logError("This User does not have any SettingValue"+error)
+                  callback(null,setting.htmlCode.unavailable_ressources);
+                });
+
+            }).catch(function(error) {
+
+                utils.logError("error getting user : "+idApi)
+                callback(null,setting.htmlCode.unavailable_ressources);
+            });
+        });
+    }
+
+*/
 
    var getUserAroundBySetting = function(idApi,callback){
 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
+      // I wanted to use the ORM but it does not work properly with geospatial request.
+      var queryRequest = 'SELECT *, ST_Distance_Sphere(ST_MakePoint(:lattitude,:longitude), "location") AS user_distance '+
+                          'FROM "Users" '+
+                          'WHERE ST_Distance_Sphere(ST_MakePoint(:lattitude, :longitude), "location") <= ( :radius*1000 ) ' +
+                          'AND age >= :ageMin '+
+                          'AND age < :ageMax '+
+                          'AND id != \':idUser\''+
+                          'ORDER by user_distance;'
+
+/*
       // return User around the position.
       var queryRequest = 'SELECT *, point(:lattitude,:longitude) <@> point(longitude, lattitude)::point AS user_distance '+
                   'FROM public."Users" '+
@@ -123,6 +199,7 @@ function controllerUtilisateur(){
                   'AND age < :ageMax '+
                   'AND id != \':idUser\''+
                   'ORDER by user_distance;'
+*/
 
       User.sync().then(function () {
         // select query.
@@ -136,22 +213,28 @@ function controllerUtilisateur(){
                 getUser.getSetting().then(function(settingUser) {
 
                     sequelize.query(queryRequest,
-                      { 
+                    { 
                         replacements: 
                                       { 
-                                        lattitude: getUser.lattitude, longitude: getUser.longitude,
-                                        radius: settingUser.radius, ageMin: settingUser.ageMin,
-                                        ageMax: settingUser.ageMax, idUser : getUser.id}, type: sequelize.QueryTypes.SELECT 
-                                      }).then(function(usersAround) {
-                                            utils.logInfo(usersAround)
-                                            usersAround.forEach(function(value){
-                                              userManipulation.transformResponseClient(value);
-                                            });                                            
-                                            callback(usersAround,setting.htmlCode.succes_request);
-                                      }).catch(function(error) {
-                                            utils.logError(error)
-                                            callback(null,setting.htmlCode.unavailable_ressources);
-                                      });
+                                        lattitude: getUser.location.coordinates[0],
+                                        longitude: getUser.location.coordinates[1],
+                                        radius: settingUser.radius,
+                                        ageMin: settingUser.ageMin,
+                                        ageMax: settingUser.ageMax,
+                                        idUser : getUser.id
+                                      }, type: sequelize.QueryTypes.SELECT 
+
+                      }).then(function(usersAround) {
+                            usersAround.forEach(function(value){
+                              userManipulation.transformResponseClient(value);
+                            });   
+
+                            callback(usersAround,setting.htmlCode.succes_request);
+
+                      }).catch(function(error) {
+                            utils.logError('Query impossible '+error)
+                            callback(null,setting.htmlCode.unavailable_ressources);
+                      });
 
                 }).catch(function(error) {
                   utils.logError("This User does not have any SettingValue"+error)
@@ -238,12 +321,13 @@ function controllerUtilisateur(){
       utils.logInfo("getUsersAround()");
       utils.logInfo(UserObject);
 
+      
       // We synchronize with the databse in order to change the name and the 
        User.sync({force: false}).then(function () {
 
+            var point = { type: 'Point', coordinates: [UserObject.lattitude,UserObject.longitude]};
             var updateUser =  User.update({
-                lattitude : UserObject.lattitude,
-                longitude : UserObject.longitude,
+                location : point
               }, 
               {
               where: {

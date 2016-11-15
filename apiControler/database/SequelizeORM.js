@@ -51,8 +51,7 @@ function BaseDeDonnee()
           profilePicture      : Sequelize.STRING,
           description         : Sequelize.STRING,
           lastname            : Sequelize.STRING,
-          lattitude           : Sequelize.REAL,
-          longitude           : Sequelize.REAL,
+          location            : Sequelize.GEOMETRY('POINT')
 
       },{
           timestamps: false
