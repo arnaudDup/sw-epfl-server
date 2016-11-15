@@ -111,15 +111,17 @@ function controllerUtilisateur(){
 
 
 
-   var getUserAroundReal = function(idApi,callback){
+   var getUserAroundBySetting = function(idApi,callback){
 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
+      // return User around the position.
       var queryRequest = 'SELECT *, point(:lattitude,:longitude) <@> point(longitude, lattitude)::point AS user_distance '+
                   'FROM public."Users" '+
                   'WHERE (point(:lattitude, :longitude) <@> point(longitude, lattitude)) < :radius '+
                   'AND age >= :ageMin '+
                   'AND age < :ageMax '+
+                  'AND id != \':idUser\''+
                   'ORDER by user_distance;'
 
       User.sync().then(function () {
@@ -134,11 +136,12 @@ function controllerUtilisateur(){
                 getUser.getSetting().then(function(settingUser) {
 
                     sequelize.query(queryRequest,
-                      { replacements: 
+                      { 
+                        replacements: 
                                       { 
                                         lattitude: getUser.lattitude, longitude: getUser.longitude,
                                         radius: settingUser.radius, ageMin: settingUser.ageMin,
-                                        ageMax: settingUser.ageMax, idApiConnection: idApi}, type: sequelize.QueryTypes.SELECT 
+                                        ageMax: settingUser.ageMax, idUser : getUser.id}, type: sequelize.QueryTypes.SELECT 
                                       }).then(function(usersAround) {
                                             utils.logInfo(usersAround)
                                             usersAround.forEach(function(value){
@@ -162,44 +165,6 @@ function controllerUtilisateur(){
             });
         });
   }
-
-
-  // private method, allow to get a specific user designed by api connection.
-  var getUserAroundByRadius = function(idApi,callback){
-
-      utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
-
-      User.sync().then(function () {
-
-         var getUser =  User.findOne({
-              where: {
-                idApiConnection: idApi
-              }
-
-            }).then(function(getUser) {
-
-                utils.logError("request succeed"+idApi)
-                delete getUser.dataValues['id']
-                var user1 = userManipulation.transformResponseClient(getUser.dataValues);
-
-                var testUser = null;
-                if (Math.random() > 0.5){
-                  testUser = [user1,user1]
-                }
-                else {
-                  testUser = [user1,user1,user1]
-                }
-
-                callback(testUser,setting.htmlCode.succes_request);
-
-            }).catch(function(error) {
-
-                utils.logError("error getting user : "+idApi)
-                callback(null,setting.htmlCode.unavailable_ressources);
-            });
-        });
-
-    }
 
 
     this.updateGetInformationUser = function (body,callback)
@@ -294,7 +259,7 @@ function controllerUtilisateur(){
               // We get the user in the database and send to the client. 
               else{
                   utils.logInfo("I'am update the user");
-                  getUserAroundReal(UserObject.idApiConnection,callback);
+                  getUserAroundBySetting(UserObject.idApiConnection,callback);
               }
           }).catch(function(error) {
                utils.logInfo("controllerUtilisateur(), the request fail"+error);
