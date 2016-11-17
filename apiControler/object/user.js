@@ -1,18 +1,29 @@
 var utils = require('../utils/Utils.js');
 
+//default value
+var LATTITUDE = 46.526848
+var LONGITUDE = 6.601919
+
+
 function UserDto(){
 
     this.transformResponseClient = function (UserObject) {
 
         utils.logInfo("transformResponseClient(), Modify the Json client")
+        UserObject.currentMusicId = UserObject.CurrentMusicId
 
         // Modify the location object.
         if(UserObject.location != null){
-            UserObject.currentMusicId = UserObject.CurrentMusicId
+            
             UserObject.location.lattitude = UserObject.location.coordinates[0]
             UserObject.location.longitude = UserObject.location.coordinates[1]
             delete UserObject.location['type']
             delete UserObject.location['coordinates']
+        }
+        // if the location is null, we add some default value.
+        else{
+            UserObject.location.lattitude = LATTITUDE
+            UserObject.location.longitude = LONGITUDE
         }
         delete UserObject['CurrentMusicId']
         utils.logInfo("transformResponseClient(), return response")

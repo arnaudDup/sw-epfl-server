@@ -190,17 +190,6 @@ function controllerUtilisateur(){
                           'AND id != \':idUser\''+
                           'ORDER by user_distance;'
 
-/*
-      // return User around the position.
-      var queryRequest = 'SELECT *, point(:lattitude,:longitude) <@> point(longitude, lattitude)::point AS user_distance '+
-                  'FROM public."Users" '+
-                  'WHERE (point(:lattitude, :longitude) <@> point(longitude, lattitude)) < :radius '+
-                  'AND age >= :ageMin '+
-                  'AND age < :ageMax '+
-                  'AND id != \':idUser\''+
-                  'ORDER by user_distance;'
-*/
-
       User.sync().then(function () {
         // select query.
          var getUser =  User.findOne({
@@ -212,6 +201,7 @@ function controllerUtilisateur(){
                 utils.logInfo("request succeed"+idApi)
                 getUser.getSetting().then(function(settingUser) {
 
+                    // execute the query by replacing values in query.
                     sequelize.query(queryRequest,
                     { 
                         replacements: 
@@ -253,8 +243,10 @@ function controllerUtilisateur(){
     this.updateGetInformationUser = function (body,callback)
     {     
         utils.logDebug("adduser()"+JSON.stringify(buildRequestFacebook(body.id,body.accesToken)));
+        console.log("token"+body.accesToken)
+        console.log("id   "+body.id)
 
-        // GET the user description by doing a post on facebook API.
+        // GET the user description by doing a post on facebook API
         unirest.get(buildRequestFacebook(body.id,body.accesToken)).end(function(res){
 
           // We can't reach the facebook graph.
