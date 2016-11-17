@@ -20,6 +20,8 @@ var sequelize = require('../database/SequelizeORM.js').sequelize ;
 
 var URL_FACEBOOK = "https://graph.facebook.com/";
 var FIELDS_FACEBOOK = 'email,cover,birthday,first_name,last_name,name,picture';
+var LATTITUDE = 46.526848
+var LONGITUDE = 6.601919
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
@@ -34,6 +36,8 @@ function controllerUtilisateur(){
           utils.logInfo("createUser(), insertion or geetin a user");
           var UserAge = userManipulation.computeAge(res.body.birthday);
 
+          // default location.
+          var point = { type: 'Point', coordinates: [LATTITUDE,LONGITUDE]};
 
           // Insert the new user in the database .
           User.sync({force: false}).then(function () {
@@ -45,7 +49,8 @@ function controllerUtilisateur(){
                         email : res.body.email,
                         age : UserAge,
                         profilePicture : urlPictureFacebook,
-                        backgroundPicture : backgroundPict
+                        backgroundPicture : backgroundPict,
+                        location : point
 
                 // callback if the user srequest succeed.
                 }).then(function(createUser) {

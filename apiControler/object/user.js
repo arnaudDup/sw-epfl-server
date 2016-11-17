@@ -1,8 +1,6 @@
 var utils = require('../utils/Utils.js');
 
-//default value
-var LATTITUDE = 46.526848
-var LONGITUDE = 6.601919
+
 
 
 function UserDto(){
@@ -20,11 +18,7 @@ function UserDto(){
             delete UserObject.location['type']
             delete UserObject.location['coordinates']
         }
-        // if the location is null, we add some default value.
-        else{
-            UserObject.location.lattitude = LATTITUDE
-            UserObject.location.longitude = LONGITUDE
-        }
+        
         delete UserObject['CurrentMusicId']
         utils.logInfo("transformResponseClient(), return response")
         return UserObject;
