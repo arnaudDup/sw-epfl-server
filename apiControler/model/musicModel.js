@@ -16,6 +16,10 @@ var Music = require('../database/SequelizeORM.js').Music;
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 var URL_LASTFM = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo"
 
+
+var TAG_MUSIC = ['pop','rock','rap','metal','hiphop']
+var TAG_MUSIC_UNKNOWN = 'undefined'
+
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
 // Définition de l'objet controllerUtilisateur
@@ -45,6 +49,41 @@ function controlerMusic(){
                     callback(null,setting.htmlCode.unavailable_ressources);
               });
           });
+    }
+
+    this.getHistory = function(idUser,callback){
+
+        User.sync().then(function () {
+          // select query.
+           var getUser =  User.findOne({
+                where: {
+                  idApiConnection: idUser
+                }
+              }).then(function(getUser) {
+
+                  utils.logInfo("request succeed"+idUser)
+
+                  // We get the most recent, we limit to ten.
+                  getUser.getMusic({
+                    order:'"createdAt" DESC',
+                    limit : 10
+                  }).then(function(MusicsofUsers) {
+
+                      MusicsofUsers.forEach(function(value){
+                            musicManipulation.transformResponseClient(value.dataValues)
+                      });   
+                      callback(MusicsofUsers,setting.htmlCode.succes_request);
+                  }).catch(function(error) {
+                    utils.logError("Cannot get the Musics of the user "+ error)
+                    callback(null,setting.htmlCode.unavailable_ressources);
+                });
+
+            }).catch(function(error) {
+                utils.logError("error getting user : "+error)
+                callback(null,setting.htmlCode.unavailable_ressources);
+            });
+        });
+         
     }
 
 
@@ -78,7 +117,20 @@ function controlerMusic(){
                  if(key =='track'){
                       body.track = value
                   }
-                  return value;                
+                  
+
+                  if(key == 'tag'){
+                    console.log('tags')
+                    console.log(value)
+                  }
+
+                  if(key == 'toptags'){
+                    console.log('toptags')
+                    console.log(value)
+                  }
+
+                  return value;  
+                            
               });
 
 
