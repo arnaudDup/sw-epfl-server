@@ -17,8 +17,9 @@ var Music = require('../database/SequelizeORM.js').Music;
 var URL_LASTFM = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo"
 
 
-var TAG_MUSIC = ['pop','rock','rap','metal','hiphop']
-var TAG_MUSIC_UNKNOWN = 'undefined'
+var TAG_MUSIC = ['pop','rock','rap','metal','hiphop'];
+var TAG_MUSIC_UNKNOWN = 'undefined';
+var LIMIT_HISTORY = 10; 
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
@@ -66,7 +67,7 @@ function controlerMusic(){
                   // We get the most recent, we limit to ten.
                   getUser.getMusic({
                     order:'"createdAt" DESC',
-                    limit : 10
+                    limit : LIMIT_HISTORY
                   }).then(function(MusicsofUsers) {
 
                       MusicsofUsers.forEach(function(value){
