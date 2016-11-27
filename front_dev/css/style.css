@@ -1,0 +1,495 @@
+/*
+Custom CSS - Antoine Girard
+*/
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+.row-height {
+  display: table;
+  table-layout: fixed;
+  height: 100%;
+  width: 100%;
+}
+.col-height {
+  display: table-cell;
+  float: none;
+  height: 100%;
+}
+.col-top {
+  vertical-align: top;
+}
+.col-middle {
+  vertical-align: middle;
+}
+.col-bottom {
+  vertical-align: bottom;
+}
+@media (min-width: 480px) {
+  .row-xs-height {
+    display: table;
+    table-layout: fixed;
+    height: 100%;
+    width: 100%;
+  }
+  .col-xs-height {
+    display: table-cell;
+    float: none;
+    height: 100%;
+  }
+  .col-xs-top {
+    vertical-align: top;
+  }
+  .col-xs-middle {
+    vertical-align: middle;
+  }
+  .col-xs-bottom {
+    vertical-align: bottom;
+  }
+}
+
+@media (min-width: 768px) {
+  .row-sm-height {
+    display: table;
+    table-layout: fixed;
+    height: 100%;
+    width: 100%;
+  }
+  .col-sm-height {
+    display: table-cell;
+    float: none;
+    height: 100%;
+  }
+  .col-sm-top {
+    vertical-align: top;
+  }
+  .col-sm-middle {
+    vertical-align: middle;
+  }
+  .col-sm-bottom {
+    vertical-align: bottom;
+  }
+}
+
+@media (min-width: 992px) {
+  .row-md-height {
+    display: table;
+    table-layout: fixed;
+    height: 100%;
+    width: 100%;
+  }
+  .col-md-height {
+    display: table-cell;
+    float: none;
+    height: 100%;
+  }
+  .col-md-top {
+    vertical-align: top;
+  }
+  .col-md-middle {
+    vertical-align: middle;
+  }
+  .col-md-bottom {
+    vertical-align: bottom;
+  }
+}
+
+@media (min-width: 1200px) {
+  .row-lg-height {
+    display: table;
+    table-layout: fixed;
+    height: 100%;
+    width: 100%;
+  }
+  .col-lg-height {
+    display: table-cell;
+    float: none;
+    height: 100%;
+  }
+  .col-lg-top {
+    vertical-align: top;
+  }
+  .col-lg-middle {
+    vertical-align: middle;
+  }
+  .col-lg-bottom {
+    vertical-align: bottom;
+  }
+}
+
+.affix, .affix-top {
+  transition: 1s;
+  border-bottom: 0px;
+}
+
+.affix-top {
+  background-color: transparent;
+  color: #fff;
+}
+
+.affix-top a {
+  color: #fff !important;
+}
+
+.affix-top .icon-bar {
+  background-color: #fff !important;
+}
+
+
+header {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  text-align: center;
+  background-image: url("../img/header-bg.jpg");
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+header .header-content {
+  position: relative;
+  width: 100%;
+  padding: 100% 15px;
+  text-align: center;
+  color: #fff;
+}
+
+header .header-content .header-content-inner h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 5em;
+}
+
+header .btn {
+  background-color: transparent;
+  border-color: #fff;
+  color: #fff;
+  transition: 0.2s;
+}
+
+header .btn:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+header .btn:focus {
+  color: #fff;
+}
+
+
+@media(min-width:768px) {
+  header {
+    min-height: 100%;
+  }
+
+  header .header-content {
+      position: absolute;
+      top: 50%;
+      padding: 0 50px;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+  }
+
+  header .header-content .header-content-inner {
+      margin-right: auto;
+      margin-left: auto;
+      max-width: 1000px;
+  }
+
+  header .header-content .header-content-inner p {
+      margin-right: auto;
+      margin-left: auto;
+      max-width: 80%;
+      font-size: 18px;
+  }
+}
+
+ .inverted-color {
+  background-color: #000;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  color: #fff;
+}
+
+.aboutme-image {
+  padding-bottom: 20px;
+}
+
+.aboutme-image img {
+  height: 200px;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.aboutme-description {
+  top: 50%;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.timeline {
+	list-style:none;
+	padding:0;
+	position:relative
+}
+.timeline:before {
+	top:0;
+	bottom:0;
+	position:absolute;
+	content:"";
+	width:2px;
+	background-color:#f1f1f1;
+	left:40px;
+	margin-left:-1.5px
+}
+.timeline>li {
+	margin-bottom:50px;
+	position:relative;
+	min-height:50px
+}
+.timeline>li:before,.timeline>li:after {
+	content:" ";
+	display:table
+}
+.timeline>li:after {
+	clear:both
+}
+.timeline>li .timeline-panel {
+	width:100%;
+	float:right;
+	padding:0 20px 0 100px;
+	position:relative;
+	text-align:left
+}
+.timeline>li .timeline-panel:before {
+	border-left-width:0;
+	border-right-width:15px;
+	left:-15px;
+	right:auto
+}
+.timeline>li .timeline-panel:after {
+	border-left-width:0;
+	border-right-width:14px;
+	left:-14px;
+	right:auto
+}
+.timeline>li .timeline-image {
+	left:0;
+	margin-left:0;
+	width:80px;
+	height:80px;
+	position:absolute;
+	z-index:100;
+	background-color:#00427a;
+	color:#fff;
+	border-radius:100%;
+	border:7px solid #f1f1f1;
+	text-align:center
+}
+.timeline>li .timeline-panel h3 {
+  font-size: 16px;
+	margin-top:12px;
+	line-height:14px;
+  font-weight: bold;
+}
+.timeline>li .timeline-image h4 {
+	font-size:10px;
+	margin-top:12px;
+	line-height:14px
+}
+.timeline>li.timeline-inverted>.timeline-panel {
+	float:right;
+	text-align:left;
+	padding:0 20px 0 100px
+}
+.timeline>li.timeline-inverted>.timeline-panel:before {
+	border-left-width:0;
+	border-right-width:15px;
+	left:-15px;
+	right:auto
+}
+.timeline>li.timeline-inverted>.timeline-panel:after {
+	border-left-width:0;
+	border-right-width:14px;
+	left:-14px;
+	right:auto
+}
+.timeline>li:last-child {
+	margin-bottom:0
+}
+.timeline>li .timeline-image i {
+  margin-top: 12px;
+}
+.timeline .timeline-heading h4 {
+	margin-top:0;
+	color:inherit
+}
+.timeline .timeline-heading h4.subheading {
+	text-transform:none
+}
+.timeline .timeline-body>p,.timeline .timeline-body>ul {
+	margin-bottom:0
+}
+@media (min-width:768px) {
+	.timeline:before {
+		left:50%
+	}
+	.timeline>li {
+		margin-bottom:100px;
+		min-height:100px
+	}
+	.timeline>li .timeline-panel {
+		width:41%;
+		float:left;
+		padding:0 20px 20px 10px;
+		text-align:right
+	}
+	.timeline>li .timeline-image {
+		width:100px;
+		height:100px;
+		left:50%;
+		margin-left:-50px
+	}
+  .timeline>li .timeline-image i {
+    margin-top: 20px;
+  }
+	.timeline>li .timeline-image h4 {
+		font-size:13px;
+		margin-top:16px;
+		line-height:18px
+	}
+	.timeline>li.timeline-inverted>.timeline-panel {
+		float:right;
+		text-align:left;
+		padding:0 10px 20px 20px
+	}
+}
+@media (min-width:992px) {
+	.timeline>li {
+		min-height:150px
+	}
+	.timeline>li .timeline-panel {
+		padding:0 20px 20px
+	}
+	.timeline>li .timeline-image {
+		width:150px;
+		height:150px;
+		margin-left:-75px
+	}
+  .timeline>li .timeline-image i {
+    margin-top: 45px;
+  }
+	.timeline>li .timeline-image h4 {
+		font-size:18px;
+		margin-top:30px;
+		line-height:26px
+	}
+	.timeline>li.timeline-inverted>.timeline-panel {
+		padding:0 20px 20px
+	}
+}
+@media (min-width:1200px) {
+	.timeline>li {
+		min-height:170px
+	}
+	.timeline>li .timeline-panel {
+		padding:0 20px 20px 50px
+	}
+	.timeline>li .timeline-image {
+		width:170px;
+		height:170px;
+		margin-left:-85px
+	}
+  .timeline>li .timeline-image i {
+    margin-top: 57px;
+  }
+	.timeline>li .timeline-image h4 {
+		margin-top:40px
+	}
+	.timeline>li.timeline-inverted>.timeline-panel {
+		padding:0 50px 20px 20px
+	}
+}
+
+.thumbnail {
+  height: 100%;
+}
+
+.portfolio-link {
+  display: block;
+  position: relative;
+}
+
+.portfolio-hover {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(125, 125, 125, 0.5);
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.portfolio-hover:hover {
+  opacity: 1;
+}
+
+.portfolio-hover-content {
+  position: absolute;
+  width: 100%;
+  font-size: 30px;
+  top:45%;
+  color: #fff;
+}
+
+.modal {
+  padding: 0 !important;
+}
+
+.modal-dialog {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.modal-content {
+  min-height: 100%;
+  background-color: rgba(255,255,255,0.9);
+}
+
+.modal-content img {
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 500px;
+}
+
+.modal-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#contactme a {
+  color: #fff;
+}
+
+#contactme a:hover {
+  color: #bbb;
+  text-decoration: none;
+}
+
+#contactme a:focus {
+  color: #fff;
+  text-decoration: none;
+}
