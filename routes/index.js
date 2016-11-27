@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   // on affiche la page d'acceuil.
-  res.sendFile('Acceuil.html', {root: __dirname + '/../front_dev'});
+  res.sendFile('Acceuil.html', {root: __dirname + '/../public'});
 });
 
 module.exports = router;
