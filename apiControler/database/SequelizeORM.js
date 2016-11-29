@@ -64,6 +64,7 @@ function BaseDeDonnee()
           name          : Sequelize.STRING,
           url           : Sequelize.STRING,
           tag           : Sequelize.STRING,
+          urlPicture    : Sequelize.STRING,
 
       },{
           timestamps: true
