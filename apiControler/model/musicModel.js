@@ -20,7 +20,7 @@ var URL_LASTFM = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo"
 var TAG_MUSIC = ['pop','rock','rap','metal','hiphop'];
 var TAG_MUSIC_UNKNOWN = 'unknown';
 var LIMIT_HISTORY = 10; 
-var SIZE_PHOTO = 'medium'
+var SIZE_PHOTO = 'large'
 
 //---------------------------------- DEFINE CONSTANT ------------------------------------
 
