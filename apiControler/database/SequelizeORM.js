@@ -77,7 +77,7 @@ function BaseDeDonnee()
           ageMin        : {type: Sequelize.INTEGER,defaultValue: AGE_MIN_DEFAULT},
           ageMax        : {type: Sequelize.INTEGER,defaultValue: AGE_MAX_DEFAULT},
           radius        : {type: Sequelize.INTEGER,defaultValue: RADIUS_DEFAULT},
-
+          musicTaste    : {type : Sequelize.ARRAY(Sequelize.STRING), defaultValue: null}
 
       },{
           timestamps: false

@@ -120,14 +120,7 @@ function controllerUtilisateur(){
 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
-      // I wanted to use the ORM but it does not work properly with geospatial request.
-      var queryRequest = 'SELECT *, ST_Distance_Sphere(ST_MakePoint(:lattitude,:longitude), "location") AS user_distance '+
-                          'FROM "Users" '+
-                          'WHERE ST_Distance_Sphere(ST_MakePoint(:lattitude, :longitude), "location") <= ( :radius*1000 ) ' +
-                          'AND age >= :ageMin '+
-                          'AND age < :ageMax '+
-                          'AND id != \':idUser\''+
-                          'ORDER by user_distance;'
+
 
       User.sync().then(function () {
         // select query.
@@ -140,6 +133,19 @@ function controllerUtilisateur(){
                 utils.logInfo("request succeed"+idApi)
                 getUser.getSetting().then(function(settingUser) {
 
+                // taking into account the value of the setting of the user.
+                tasteMusicRequest = settingUser.musicTaste.length == 0 ? ' ' : 'AND tag IN (:tags) '
+
+                // I wanted to use the ORM but it does not work properly with geospatial request.
+                var queryRequest = 'SELECT *, ST_Distance_Sphere(ST_MakePoint(:lattitude,:longitude), "location") AS user_distance '+
+                                    'FROM "Users" NATURAL JOIN "Music" '+
+                                    'WHERE ST_Distance_Sphere(ST_MakePoint(:lattitude, :longitude), "location") <= ( :radius*1000 ) ' +
+                                    'AND age >= :ageMin '+
+                                    'AND age < :ageMax '+
+                                    tasteMusicRequest+ 
+                                    'AND id != \':idUser\' '+
+                                    'ORDER by user_distance;'
+
                     // execute the query by replacing values in query.
                     sequelize.query(queryRequest,
                     { 
@@ -150,7 +156,8 @@ function controllerUtilisateur(){
                                         radius: settingUser.radius,
                                         ageMin: settingUser.ageMin,
                                         ageMax: settingUser.ageMax,
-                                        idUser : getUser.id
+                                        idUser : getUser.id,
+                                        tags : settingUser.musicTaste
                                       }, type: sequelize.QueryTypes.SELECT 
 
                       }).then(function(usersAround) {
@@ -370,6 +377,7 @@ function controllerUtilisateur(){
                                         ageMin        : SettingObject.ageMin,
                                         ageMax        : SettingObject.ageMax,
                                         radius        : SettingObject.radius,
+                                        musicTaste    : SettingObject.musicTaste,
                                 }).then(function(createSetting) {
                                         // create new settign
                                         utils.logInfo("initiateValue(), Added Setting default");
@@ -395,6 +403,7 @@ function controllerUtilisateur(){
                                     ageMin        : SettingObject.ageMin,
                                     ageMax        : SettingObject.ageMax,
                                     radius        : SettingObject.radius,
+                                    musicTaste    : SettingObject.musicTaste,
                              },
                              {
                                 where: {
