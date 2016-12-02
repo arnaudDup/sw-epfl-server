@@ -133,8 +133,10 @@ function controllerUtilisateur(){
                 utils.logInfo("request succeed"+idApi)
                 getUser.getSetting().then(function(settingUser) {
 
+                utils.logInfo(settingUser);
+                utils.logInfo(settingUser.musicTaste);
                 // taking into account the value of the setting of the user.
-                tasteMusicRequest = settingUser.musicTaste.length == 0 ? ' ' : 'AND tag IN (:tags) '
+                tasteMusicRequest = settingUser.musicTaste == null ? ' ' : 'AND tag IN (:tags) '
 
                 // I wanted to use the ORM but it does not work properly with geospatial request.
                 var queryRequest = 'SELECT *, ST_Distance_Sphere(ST_MakePoint(:lattitude,:longitude), "location") AS user_distance '+
