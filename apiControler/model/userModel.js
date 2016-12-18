@@ -399,7 +399,12 @@ function controllerUtilisateur(){
                     else { 
                          // Insert the default setting for everyone in the database.
                          Setting.sync({force: false}).then(function () {
-
+                            if (SettingObject.musicTaste != undefined){
+                              var array = []
+                              array.push(SettingObject.musicTaste);
+                              SettingObject.musicTaste = array
+                            }
+                            utils.logInfo(SettingObject.musicTaste);
                             // we create a new setting associated to the user.
                             var createSetting =  Setting.update({
                                     ageMin        : SettingObject.ageMin,
