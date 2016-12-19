@@ -120,8 +120,6 @@ function controllerUtilisateur(){
 
       utils.logInfo("controllerUtilisateur(), insertion or geetin a user, adduser()");
 
-
-
       User.sync().then(function () {
         // select query.
          var getUser =  User.findOne({
@@ -133,19 +131,16 @@ function controllerUtilisateur(){
                 utils.logInfo("request succeed"+idApi)
                 getUser.getSetting().then(function(settingUser) {
 
-                utils.logInfo(settingUser);
-                utils.logInfo(settingUser.musicTaste);
                 // taking into account the value of the setting of the user.
                 tasteMusicRequest = settingUser.musicTaste == null ? ' ' : 'AND tag IN (:tags) '
+                utils.logInfo("selection music : " + tasteMusicRequest)
 
                 // I wanted to use the ORM but it does not work properly with geospatial request.
                 var queryRequest = 'SELECT *, ST_Distance_Sphere(ST_MakePoint(:lattitude,:longitude), "location") AS user_distance '+
-                                    'FROM "Users" NATURAL JOIN "Music" '+
+                                    'FROM "Users" INNER JOIN "Music" ON ("Users"."CurrentMusicId" = "Music"."id") '+
                                     'WHERE ST_Distance_Sphere(ST_MakePoint(:lattitude, :longitude), "location") <= ( :radius*1000 ) ' +
-                                    'AND age >= :ageMin '+
-                                    'AND age < :ageMax '+
                                     tasteMusicRequest+ 
-                                    'AND id != \':idUser\' '+
+                                    'AND "Users".id != \':idUser\' '+
                                     'ORDER by user_distance;'
 
                     // execute the query by replacing values in query.
@@ -156,8 +151,6 @@ function controllerUtilisateur(){
                                         lattitude: getUser.location.coordinates[0],
                                         longitude: getUser.location.coordinates[1],
                                         radius: settingUser.radius,
-                                        ageMin: settingUser.ageMin,
-                                        ageMax: settingUser.ageMax,
                                         idUser : getUser.id,
                                         tags : settingUser.musicTaste
                                       }, type: sequelize.QueryTypes.SELECT 
