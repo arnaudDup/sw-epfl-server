@@ -14,8 +14,6 @@
       top:100
     }
   })
-
-  new WOW().init();
 })(jQuery)
 
 $('.navbar-collapse ul li a').click(function() {
